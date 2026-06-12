@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Travis Tracker · 128×64 RGB Matrix · World Cup 2026</title>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<rect width="100" height="100" fill="#0e1018"/>
+<g fill="#5b8cff"><circle cx="30" cy="44" r="3"/><circle cx="38" cy="44" r="3"/><circle cx="46" cy="44" r="3"/></g>
+<g fill="#e4ecff"><circle cx="56" cy="44" r="3"/><circle cx="64" cy="44" r="3"/><circle cx="72" cy="44" r="3"/></g>
+<g fill="#34c878"><circle cx="80" cy="44" r="3"/><circle cx="88" cy="44" r="3"/><circle cx="96" cy="44" r="3"/></g>
+<g fill="#ff5454"><circle cx="14" cy="44" r="3"/></g>
+</svg>
+</template>
+<style>
+  :root {
+    --bg: #0b0c0f;
+    --panel-edge: #1c1f27;
+    --ink: #e7ebf2;
+    --ink-dim: #8a92a4;
+    --ink-faint: #565d6c;
+    --accent: #6fb6ff;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: var(--mono);
+    -webkit-font-smoothing: antialiased;
+    padding: 0 28px 80px;
+    background-image: radial-gradient(900px 500px at 70% -10%, rgba(60,90,150,0.10), transparent 70%);
+  }
+
+  header.top {
+    max-width: 1320px; margin: 0 auto; padding: 40px 4px 30px;
+    border-bottom: 1px solid var(--panel-edge);
+  }
+  .eyebrow {
+    font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--accent); opacity: 0.9;
+  }
+  header.top h1 {
+    font-size: 26px; font-weight: 600; letter-spacing: -0.01em; margin-top: 12px;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  header.top p {
+    margin-top: 12px; max-width: 780px; line-height: 1.65;
+    color: var(--ink-dim); font-size: 13.5px;
+  }
+  header.top p b { color: var(--ink); font-weight: 600; }
+  .specrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .chip {
+    font-size: 11px; letter-spacing: 0.04em; color: var(--ink-dim);
+    border: 1px solid var(--panel-edge); border-radius: 999px;
+    padding: 5px 12px; background: rgba(255,255,255,0.02);
+  }
+  .chip b { color: var(--ink); font-weight: 600; }
+
+  main { max-width: 1320px; margin: 0 auto; }
+
+  .sec { margin-top: 52px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 20px; }
+  .sec-head h2 {
+    font-size: 18px; font-weight: 600; letter-spacing: 0.02em;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+  .sec-head h2::before {
+    content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px;
+    background: var(--accent); margin-right: 10px; vertical-align: middle;
+    transform: translateY(-2px);
+  }
+  .sec-sub { font-size: 12px; color: var(--ink-faint); letter-spacing: 0.02em; }
+
+  .grid {
+    display: grid; gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+
+  .card { display: flex; flex-direction: column; gap: 12px; }
+  .screen {
+    position: relative; cursor: zoom-in;
+    border-radius: 7px; overflow: hidden;
+    background: #06070a;
+    border: 1px solid var(--panel-edge);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 14px 40px rgba(0,0,0,0.5);
+    transition: border-color 0.16s ease, transform 0.16s ease;
+  }
+  .screen:hover { border-color: #2b3550; transform: translateY(-2px); }
+  .screen::after {
+    content: "⤢ inspect"; position: absolute; right: 8px; bottom: 7px;
+    font-size: 10px; letter-spacing: 0.08em; color: rgba(255,255,255,0.55);
+    background: rgba(0,0,0,0.45); padding: 3px 7px; border-radius: 5px;
+    opacity: 0; transition: opacity 0.16s ease; pointer-events: none;
+  }
+  .screen:hover::after { opacity: 1; }
+  canvas.matrix { display: block; width: 100%; height: auto; }
+
+  .cap { display: flex; flex-direction: column; gap: 3px; padding: 0 2px; }
+  .cap-name { font-size: 12.5px; color: var(--ink); letter-spacing: 0.02em; }
+  .cap-desc { font-size: 11.5px; color: var(--ink-faint); line-height: 1.45; }
+
+  /* lightbox */
+  #lightbox {
+    position: fixed; inset: 0; z-index: 50; display: none;
+    align-items: center; justify-content: center; padding: 48px;
+    background: rgba(6,7,10,0.82); backdrop-filter: blur(10px);
+  }
+  #lightbox.open { display: flex; }
+  .lb-stage { display: flex; flex-direction: column; gap: 18px; align-items: center; max-width: 1080px; width: 100%; }
+  #lb-screen {
+    width: 100%; border-radius: 10px; overflow: hidden; background: #06070a;
+    border: 1px solid #2b3550; box-shadow: 0 30px 90px rgba(0,0,0,0.6);
+  }
+  #lb-screen canvas { display: block; width: 100%; height: auto; }
+  .lb-meta { text-align: center; }
+  .lb-meta .n { font-size: 15px; color: var(--ink); }
+  .lb-meta .d { font-size: 12.5px; color: var(--ink-dim); margin-top: 5px; }
+  .lb-btn {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--panel-edge);
+    background: rgba(20,22,28,0.8); color: var(--ink); cursor: pointer;
+    font-size: 18px; display: flex; align-items: center; justify-content: center;
+  }
+  .lb-btn:hover { border-color: #3a4666; }
+  #lb-prev { left: 24px; } #lb-next { right: 24px; }
+  #lb-close {
+    position: fixed; top: 22px; right: 24px; width: 38px; height: 38px;
+    border-radius: 50%; border: 1px solid var(--panel-edge);
+    background: rgba(20,22,28,0.8); color: var(--ink); cursor: pointer; font-size: 18px;
+  }
+  #lb-close:hover { border-color: #3a4666; }
+
+  footer.foot {
+    max-width: 1320px; margin: 64px auto 0; padding-top: 24px;
+    border-top: 1px solid var(--panel-edge);
+    font-size: 12px; color: var(--ink-faint); line-height: 1.7;
+  }
+  footer.foot b { color: var(--ink-dim); }
+
+  /* tweaks panel */
+  #tweaks {
+    position: fixed; top: 16px; right: 16px; z-index: 60; width: 244px;
+    display: none; flex-direction: column;
+    background: rgba(14,16,20,0.96); backdrop-filter: blur(12px);
+    border: 1px solid #232735; border-radius: 12px;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+    font-family: var(--mono); color: var(--ink);
+    max-height: calc(100vh - 32px); overflow: auto;
+  }
+  #tweaks.open { display: flex; }
+  .tw-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 14px; border-bottom: 1px solid #1d2130; cursor: grab;
+  }
+  .tw-head .t { font-size: 13px; letter-spacing: 0.08em; }
+  .tw-head .x { cursor: pointer; color: var(--ink-dim); font-size: 15px; line-height: 1; border: none; background: none; }
+  .tw-head .x:hover { color: var(--ink); }
+  .tw-body { padding: 6px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .tw-grp { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint); margin: 12px 0 6px; }
+  .tw-row { display: flex; flex-direction: column; gap: 7px; padding: 5px 0; }
+  .tw-lab { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--ink-dim); }
+  .tw-lab b { color: var(--ink); font-weight: 500; }
+  .tw-row input[type=range] { width: 100%; accent-color: var(--accent); height: 4px; }
+  .tw-seg { display: flex; gap: 4px; }
+  .tw-seg button {
+    flex: 1; font-family: var(--mono); font-size: 11px; padding: 6px 4px;
+    border: 1px solid #262b3a; border-radius: 7px; background: transparent;
+    color: var(--ink-dim); cursor: pointer; transition: all 0.12s;
+  }
+  .tw-seg button.on { background: rgba(111,182,255,0.16); border-color: #3d5680; color: var(--ink); }
+</style>
+</head>
+<body>
+  <header class="top">
+    <div class="eyebrow">Travis Tracker · Display Mockups</div>
+    <h1>128 × 64 RGB Matrix · World Cup 2026</h1>
+    <p>
+      The same high-density panel, repurposed for the summer tournament — pared
+      down to the two boards that earn their place. <b>Now &amp; Next</b> answers the
+      only two questions that matter from across the room: <b>what's the score right
+      now</b>, and <b>when does the next one kick off</b>. <b>Live match</b> is the
+      single-game hero — big national flags, big score, the running minute and a
+      pitch-progress bar. Both render at the true 128×64 grid as round LEDs with a
+      touch of bloom, with flags drawn as LED pixels and live minutes / countdowns
+      ticking against the wall clock.
+    </p>
+    <div class="specrow">
+      <span class="chip"><b>128×64</b> logical px</span>
+      <span class="chip"><b>2</b> displays</span>
+      <span class="chip"><b>flag</b> + 3-letter code identity</span>
+      <span class="chip">live minutes · kickoff countdowns</span>
+      <span class="chip">flag-color tint</span>
+    </div>
+  </header>
+
+  <main id="stage"></main>
+
+  <footer class="foot">
+    Click either panel to inspect at scale (← / → to step, Esc to close).
+    Colors: <b>red</b> = live, <b>gold</b> = minute / kickoff time, <b>green</b> = pitch
+    progress, flag accents tint the team codes. Open <b>Tweaks</b> to scrub
+    the live minute, set the score, swap codes ↔ country names, or toggle the flags.
+  </footer>
+
+  <div id="lightbox">
+    <button id="lb-close" title="Close (Esc)">✕</button>
+    <button id="lb-prev" class="lb-btn" title="Previous (←)">‹</button>
+    <button id="lb-next" class="lb-btn" title="Next (→)">›</button>
+    <div class="lb-stage">
+      <div id="lb-screen"></div>
+      <div class="lb-meta"><div class="n" id="lb-name"></div><div class="d" id="lb-desc"></div></div>
+    </div>
+  </div>
+
+  <script src="matrix/led-core.js"></script>
+  <script src="matrix/fonts.js"></script>
+  <script src="matrix/geist-native.js"></script>
+  <script src="matrix/fontblit.js"></script>
+  <script src="worldcup/wc-data.js"></script>
+  <script src="worldcup/wc-flags.js"></script>
+  <script src="worldcup/wc-renderers.js"></script>
+  <script>
+  // ── Tweaks: defaults (host-persisted), state, panel UI, host protocol ──
+  (function () {
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "glow": 0.8,
+      "brightness": 1,
+      "matchMin": 78,
+      "homeScore": 3,
+      "awayScore": 2,
+      "flagTint": true,
+      "flagIcons": true,
+      "clock24": false
+    }/*EDITMODE-END*/;
+
+    const TW = Object.assign({}, TWEAK_DEFAULTS);
+    window.TW = TW;
+
+    function set(key, val) {
+      TW[key] = val;
+      try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*'); } catch (e) {}
+      syncUI();
+    }
+
+    const panel = document.createElement('div');
+    panel.id = 'tweaks';
+    panel.innerHTML =
+      '<div class="tw-head"><span class="t">Tweaks</span><button class="x" title="Close">✕</button></div>' +
+      '<div class="tw-body"></div>';
+    document.body.appendChild(panel);
+    const body = panel.querySelector('.tw-body');
+    const refreshers = [];
+
+    function group(name) { const g = document.createElement('div'); g.className = 'tw-grp'; g.textContent = name; body.appendChild(g); }
+
+    function slider(key, label, min, max, step, fmt) {
+      const row = document.createElement('div'); row.className = 'tw-row';
+      row.innerHTML = '<div class="tw-lab"><span>' + label + '</span><b></b></div>';
+      const val = row.querySelector('b');
+      const inp = document.createElement('input');
+      inp.type = 'range'; inp.min = min; inp.max = max; inp.step = step;
+      row.appendChild(inp); body.appendChild(row);
+      inp.addEventListener('input', () => set(key, parseFloat(inp.value)));
+      refreshers.push(() => { inp.value = TW[key]; val.textContent = (fmt ? fmt(TW[key]) : TW[key]); });
+    }
+
+    function seg(key, label, opts) {
+      const row = document.createElement('div'); row.className = 'tw-row';
+      row.innerHTML = '<div class="tw-lab"><span>' + label + '</span></div>';
+      const wrap = document.createElement('div'); wrap.className = 'tw-seg';
+      opts.forEach((o) => {
+        const b = document.createElement('button'); b.textContent = o.n;
+        b.addEventListener('click', () => set(key, o.v));
+        wrap.appendChild(b); o._el = b;
+      });
+      row.appendChild(wrap); body.appendChild(row);
+      refreshers.push(() => opts.forEach((o) => o._el.classList.toggle('on', TW[key] === o.v)));
+    }
+
+    function syncUI() { refreshers.forEach((f) => f()); }
+
+    // action buttons (no persisted state) — reuse the segmented styling
+    function btns(items) {
+      const row = document.createElement('div'); row.className = 'tw-row';
+      const wrap = document.createElement('div'); wrap.className = 'tw-seg';
+      items.forEach((o) => {
+        const b = document.createElement('button'); b.textContent = o.n;
+        b.addEventListener('click', o.fn);
+        wrap.appendChild(b);
+      });
+      row.appendChild(wrap); body.appendChild(row);
+    }
+
+    group('Live match');
+    slider('matchMin', 'Match minute', 0, 95, 1, (v) => v + "'");
+    slider('homeScore', 'USA goals', 0, 9, 1);
+    slider('awayScore', 'MEX goals', 0, 9, 1);
+
+    group('Goal celebration');
+    btns([
+      { n: 'USA scores', fn: () => set('homeScore', Math.min(9, (TW.homeScore || 0) + 1)) },
+      { n: 'MEX scores', fn: () => set('awayScore', Math.min(9, (TW.awayScore || 0) + 1)) }
+    ]);
+    btns([
+      { n: 'Replay last goal', fn: () => window.WCGoal && window.WCGoal.replay() }
+    ]);
+
+    group('Display');
+    seg('flagIcons', 'Flag icons', [{ v: true, n: 'On' }, { v: false, n: 'Off' }]);
+    seg('flagTint', 'Flag-color tint', [{ v: true, n: 'On' }, { v: false, n: 'Off' }]);
+    seg('clock24', 'Clock', [{ v: true, n: '24-hr' }, { v: false, n: '12-hr' }]);
+
+    group('Panel');
+    slider('glow', 'Glow / bloom', 0, 1.6, 0.1, (v) => v.toFixed(1));
+    slider('brightness', 'Brightness', 0.5, 1.3, 0.05, (v) => Math.round(v * 100) + '%');
+
+    syncUI();
+
+    // ── drag to reposition ──
+    (function () {
+      const h = panel.querySelector('.tw-head'); let sx, sy, ox, oy, drag = false;
+      h.addEventListener('pointerdown', (e) => {
+        if (e.target.classList.contains('x')) return;
+        drag = true; sx = e.clientX; sy = e.clientY;
+        const r = panel.getBoundingClientRect(); ox = r.left; oy = r.top;
+        panel.style.right = 'auto'; panel.style.left = ox + 'px'; panel.style.top = oy + 'px';
+        h.setPointerCapture(e.pointerId);
+      });
+      h.addEventListener('pointermove', (e) => {
+        if (!drag) return;
+        panel.style.left = (ox + e.clientX - sx) + 'px';
+        panel.style.top = Math.max(0, oy + e.clientY - sy) + 'px';
+      });
+      h.addEventListener('pointerup', () => { drag = false; });
+    })();
+
+    // ── host protocol: listener FIRST, then announce ──
+    function show() { panel.classList.add('open'); }
+    function hide() { panel.classList.remove('open'); }
+    window.addEventListener('message', (e) => {
+      const t = e.data && e.data.type;
+      if (t === '__activate_edit_mode') show();
+      else if (t === '__deactivate_edit_mode') hide();
+    });
+    panel.querySelector('.x').addEventListener('click', () => {
+      hide();
+      try { window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); } catch (e) {}
+    });
+    try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (e) {}
+  })();
+  </script>
+  <script src="worldcup/wc-app.js"></script>
+</body>
+</html>

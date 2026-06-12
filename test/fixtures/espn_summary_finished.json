@@ -1,0 +1,2060 @@
+{
+ "header": {
+  "id": "760415",
+  "uid": "s:600~l:606~e:760415",
+  "season": {
+   "year": 2026,
+   "current": true,
+   "type": 13802,
+   "name": "2026 FIFA World Cup, Group Stage"
+  },
+  "timeValid": true,
+  "competitions": [
+   {
+    "id": "760415",
+    "uid": "s:600~l:606~e:760415~c:760415",
+    "date": "2026-06-11T19:00Z",
+    "neutralSite": false,
+    "conferenceCompetition": false,
+    "boxscoreAvailable": true,
+    "commentaryAvailable": true,
+    "liveAvailable": false,
+    "onWatchESPN": false,
+    "recent": false,
+    "wallclockAvailable": true,
+    "boxscoreSource": "full",
+    "playByPlaySource": "full",
+    "competitors": [
+     {
+      "id": "203",
+      "uid": "s:600~t:203",
+      "order": 0,
+      "homeAway": "home",
+      "winner": true,
+      "advance": true,
+      "team": {
+       "id": "203",
+       "guid": "9e213fae-5b9d-d331-8b4b-33abdaf57b4f",
+       "uid": "s:600~t:203",
+       "location": "Mexico",
+       "name": "Mexico",
+       "abbreviation": "MEX",
+       "displayName": "Mexico",
+       "shortDisplayName": "Mexico",
+       "color": "006847",
+       "alternateColor": "ffffff",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/countries/500/mex.png",
+         "width": 500,
+         "height": 500,
+         "alt": "",
+         "rel": [
+          "full",
+          "default"
+         ],
+         "lastUpdated": "2023-10-25T16:19Z"
+        },
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/countries/500-dark/mex.png",
+         "width": 500,
+         "height": 500,
+         "alt": "",
+         "rel": [
+          "full",
+          "dark"
+         ],
+         "lastUpdated": "2023-10-25T16:22Z"
+        }
+       ],
+       "links": [
+        {
+         "rel": [
+          "clubhouse",
+          "desktop",
+          "team"
+         ],
+         "href": "https://www.espn.com/soccer/team/_/id/203/mexico",
+         "text": "Clubhouse"
+        }
+       ],
+       "form": "WWWWD"
+      },
+      "score": "2",
+      "linescores": [
+       {
+        "displayValue": "1"
+       },
+       {
+        "displayValue": "1"
+       }
+      ],
+      "record": [
+       {
+        "type": "total",
+        "summary": "1-0-0",
+        "displayValue": "1-0-0"
+       },
+       {
+        "type": "points",
+        "summary": "3",
+        "displayValue": "3"
+       }
+      ],
+      "groups": {
+       "abbreviation": "Group A"
+      },
+      "possession": false
+     },
+     {
+      "id": "467",
+      "uid": "s:600~t:467",
+      "order": 1,
+      "homeAway": "away",
+      "winner": false,
+      "advance": false,
+      "team": {
+       "id": "467",
+       "guid": "d4889543-c668-800d-56fa-542c10023978",
+       "uid": "s:600~t:467",
+       "location": "South Africa",
+       "name": "South Africa",
+       "abbreviation": "RSA",
+       "displayName": "South Africa",
+       "shortDisplayName": "South Africa",
+       "color": "087d5a",
+       "alternateColor": "fbb516",
+       "logos": [
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/countries/500/rsa.png",
+         "width": 500,
+         "height": 500,
+         "alt": "",
+         "rel": [
+          "full",
+          "default"
+         ],
+         "lastUpdated": "2023-10-25T16:21Z"
+        },
+        {
+         "href": "https://a.espncdn.com/i/teamlogos/countries/500-dark/rsa.png",
+         "width": 500,
+         "height": 500,
+         "alt": "",
+         "rel": [
+          "full",
+          "dark"
+         ],
+         "lastUpdated": "2023-10-25T16:21Z"
+        }
+       ],
+       "links": [
+        {
+         "rel": [
+          "clubhouse",
+          "desktop",
+          "team"
+         ],
+         "href": "https://www.espn.com/soccer/team/_/id/467/south-africa",
+         "text": "Clubhouse"
+        }
+       ],
+       "form": "LWDLD"
+      },
+      "score": "0",
+      "linescores": [
+       {
+        "displayValue": "0"
+       },
+       {
+        "displayValue": "0"
+       }
+      ],
+      "record": [
+       {
+        "type": "total",
+        "summary": "0-0-1",
+        "displayValue": "0-0-1"
+       },
+       {
+        "type": "points",
+        "summary": "0",
+        "displayValue": "0"
+       }
+      ],
+      "groups": {
+       "abbreviation": "Group A"
+      },
+      "possession": false
+     }
+    ],
+    "notes": [
+     {
+      "type": "event-ingest-note",
+      "date": "2026-06-12T09:58Z",
+      "text": "Mexico advances.",
+      "source": "38"
+     }
+    ],
+    "status": {
+     "type": {
+      "id": "28",
+      "name": "STATUS_FULL_TIME",
+      "state": "post",
+      "completed": true,
+      "description": "Full Time",
+      "detail": "FT",
+      "shortDetail": "FT"
+     }
+    },
+    "broadcasts": [
+     {
+      "type": {
+       "id": "1",
+       "shortName": "TV"
+      },
+      "market": {},
+      "media": {
+       "shortName": "FOX"
+      },
+      "lang": "en",
+      "region": "us",
+      "isNational": false
+     },
+     {
+      "type": {
+       "id": "1",
+       "shortName": "TV"
+      },
+      "market": {},
+      "media": {
+       "shortName": "Tele"
+      },
+      "lang": "en",
+      "region": "us",
+      "isNational": false
+     },
+     {
+      "type": {
+       "id": "4",
+       "shortName": "STREAMING"
+      },
+      "market": {},
+      "media": {
+       "shortName": "Peacock"
+      },
+      "lang": "en",
+      "region": "us",
+      "isNational": false
+     }
+    ],
+    "details": [
+     {
+      "clock": {
+       "value": 513.0,
+       "displayValue": "9'"
+      },
+      "scoringPlay": true,
+      "team": {
+       "id": "203",
+       "uid": "s:600~t:203",
+       "location": "Mexico",
+       "name": "Mexico",
+       "abbreviation": "MEX",
+       "displayName": "Mexico"
+      },
+      "participants": [
+       {
+        "athlete": {
+         "id": "233075",
+         "displayName": "Juli\u00e1n Qui\u00f1ones",
+         "shortName": "J. Qui\u00f1ones",
+         "links": [
+          {
+           "language": "en-US",
+           "rel": [
+            "playercard",
+            "desktop",
+            "athlete"
+           ],
+           "href": "https://www.espn.com/soccer/player/_/id/233075/julian-quinones",
+           "text": "Player Card",
+           "shortText": "Player Card"
+          }
+         ]
+        }
+       },
+       {
+        "athlete": {
+         "id": "276942",
+         "displayName": "\u00c9rik Lira",
+         "shortName": "\u00c9. Lira",
+         "links": [
+          {
+           "language": "en-US",
+           "rel": [
+            "playercard",
+            "desktop",
+            "athlete"
+           ],
+           "href": "https://www.espn.com/soccer/player/_/id/276942/erik-lira",
+           "text": "Player Card",
+           "shortText": "Player Card"
+          }
+         ]
+        }
+       }
+      ],
+      "addedClock": {
+       "value": 0.0,
+       "displayValue": ""
+      },
+      "redCard": false,
+      "penaltyKick": false,
+      "ownGoal": false
+     },
+     {
+      "clock": {
+       "value": 2940.0,
+       "displayValue": "49'"
+      },
+      "scoringPlay": false,
+      "team": {
+       "id": "467",
+       "uid": "s:600~t:467",
+       "location": "South Africa",
+       "name": "South Africa",
+       "abbreviation": "RSA",
+       "displayName": "South Africa"
+      },
+      "participants": [
+       {
+        "athlete": {
+         "id": "228595",
+         "displayName": "Sphephelo Sithole",
+         "shortName": "S. Sithole",
+         "links": [
+          {
+           "language": "en-US",
+           "rel": [
+            "playercard",
+            "desktop",
+            "athlete"
+           ],
+           "href": "https://www.espn.com/soccer/player/_/id/228595/sphephelo-sithole",
+           "text": "Player Card",
+           "shortText": "Player Card"
+          }
+         ]
+        }
+       }
+      ],
+      "addedClock": {
+       "value": 0.0,
+       "displayValue": ""
+      },
+      "redCard": true,
+      "penaltyKick": false,
+      "ownGoal": false
+     },
+     {
+      "clock": {
+       "value": 3996.0,
+       "displayValue": "67'"
+      },
+      "scoringPlay": true,
+      "team": {
+       "id": "203",
+       "uid": "s:600~t:203",
+       "location": "Mexico",
+       "name": "Mexico",
+       "abbreviation": "MEX",
+       "displayName": "Mexico"
+      },
+      "participants": [
+       {
+        "athlete": {
+         "id": "167060",
+         "displayName": "Ra\u00fal Jim\u00e9nez",
+         "shortName": "R. Jim\u00e9nez",
+         "links": [
+          {
+           "language": "en-US",
+           "rel": [
+            "playercard",
+            "desktop",
+            "athlete"
+           ],
+           "href": "https://www.espn.com/soccer/player/_/id/167060/raul-jimenez",
+           "text": "Player Card",
+           "shortText": "Player Card"
+          }
+         ]
+        }
+       },
+       {
+        "athlete": {
+         "id": "194308",
+         "displayName": "Roberto Alvarado",
+         "shortName": "R. Alvarado",
+         "links": [
+          {
+           "language": "en-US",
+           "rel": [
+            "playercard",
+            "desktop",
+            "athlete"
+           ],
+           "href": "https://www.espn.com/soccer/player/_/id/194308/roberto-alvarado",
+           "text": "Player Card",
+           "shortText": "Player Card"
+          }
+         ]
+        }
+       }
+      ],
+      "addedClock": {
+       "value": 0.0,
+       "displayValue": ""
+      },
+      "redCard": false,
+      "penaltyKick": false,
+      "ownGoal": false
+     },
+     {
+      "clock": {
+       "value": 5003.0,
+       "displayValue": "84'"
+      },
+      "scoringPlay": false,
+      "team": {
+       "id": "467",
+       "uid": "s:600~t:467",
+       "location": "South Africa",
+       "name": "South Africa",
+       "abbreviation": "RSA",
+       "displayName": "South Africa"
+      },
+      "participants": [
+       {
+        "athlete": {
+         "id": "157046",
+         "displayName": "Themba Zwane",
+         "shortName": "T. Zwane",
+         "links": [
+          {
+           "language": "en-US",
+           "rel": [
+            "playercard",
+            "desktop",
+            "athlete"
+           ],
+           "href": "https://www.espn.com/soccer/player/_/id/157046/themba-zwane",
+           "text": "Player Card",
+           "shortText": "Player Card"
+          }
+         ]
+        }
+       }
+      ],
+      "addedClock": {
+       "value": 0.0,
+       "displayValue": ""
+      },
+      "redCard": true,
+      "penaltyKick": false,
+      "ownGoal": false
+     },
+     {
+      "clock": {
+       "value": 5400.0,
+       "displayValue": "90'+2'"
+      },
+      "scoringPlay": false,
+      "team": {
+       "id": "203",
+       "uid": "s:600~t:203",
+       "location": "Mexico",
+       "name": "Mexico",
+       "abbreviation": "MEX",
+       "displayName": "Mexico"
+      },
+      "participants": [
+       {
+        "athlete": {
+         "id": "224323",
+         "displayName": "C\u00e9sar Montes",
+         "shortName": "C. Montes",
+         "links": [
+          {
+           "language": "en-US",
+           "rel": [
+            "playercard",
+            "desktop",
+            "athlete"
+           ],
+           "href": "https://www.espn.com/soccer/player/_/id/224323/cesar-montes",
+           "text": "Player Card",
+           "shortText": "Player Card"
+          }
+         ]
+        }
+       }
+      ],
+      "addedClock": {
+       "value": 87.0,
+       "displayValue": "2"
+      },
+      "redCard": true,
+      "penaltyKick": false,
+      "ownGoal": false
+     }
+    ],
+    "groups": {
+     "id": "1",
+     "name": "Group 1",
+     "abbreviation": "Group 1"
+    },
+    "isFinal": false,
+    "isThirdPlace": false,
+    "boxscoreMinutes": false,
+    "shotMapAvailable": true
+   }
+  ],
+  "links": [
+   {
+    "rel": [
+     "summary",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/match/_/gameId/760415/south-africa-mexico",
+    "text": "Summary",
+    "shortText": "Summary",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "recap",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/report/_/gameId/760415",
+    "text": "Report",
+    "shortText": "Report",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "commentary",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/commentary/_/gameId/760415",
+    "text": "Commentary",
+    "shortText": "Commentary",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "stats",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/matchstats/_/gameId/760415",
+    "text": "Statistics",
+    "shortText": "Statistics",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "lineups",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/lineups/_/gameId/760415",
+    "text": "Line-Ups",
+    "shortText": "Line-Ups",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "videos",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/video/_/gameId/760415",
+    "text": "Videos",
+    "shortText": "Videos",
+    "isExternal": false,
+    "isPremium": false
+   }
+  ],
+  "league": {
+   "id": "606",
+   "uid": "s:600~l:606",
+   "name": "FIFA World Cup",
+   "abbreviation": "FIFA World Cup",
+   "midsizeName": "FIFA.WORLD",
+   "slug": "fifa.world",
+   "isTournament": true,
+   "links": [
+    {
+     "rel": [
+      "index",
+      "desktop",
+      "league"
+     ],
+     "href": "https://www.espn.com/soccer/worldcup/",
+     "text": "Index"
+    },
+    {
+     "rel": [
+      "index",
+      "sportscenter",
+      "app",
+      "league"
+     ],
+     "href": "sportscenter://x-callback-url/showClubhouse?uid=s:600~l:606",
+     "text": "Index"
+    },
+    {
+     "rel": [
+      "schedule",
+      "desktop",
+      "league"
+     ],
+     "href": "https://www.espn.com/soccer/schedule/_/league/fifa.world",
+     "text": "Schedule"
+    },
+    {
+     "rel": [
+      "schedule",
+      "sportscenter",
+      "app",
+      "league"
+     ],
+     "href": "sportscenter://x-callback-url/showClubhouse?uid=s:600~l:606&section=scores",
+     "text": "Schedule"
+    },
+    {
+     "rel": [
+      "standings",
+      "desktop",
+      "league"
+     ],
+     "href": "https://www.espn.com/soccer/table/_/league/fifa.world",
+     "text": "Standings"
+    },
+    {
+     "rel": [
+      "standings",
+      "sportscenter",
+      "app",
+      "league"
+     ],
+     "href": "sportscenter://x-callback-url/showClubhouse?uid=s:600~l:606&section=standings",
+     "text": "Standings"
+    },
+    {
+     "rel": [
+      "scores",
+      "desktop",
+      "league"
+     ],
+     "href": "https://www.espn.com/soccer/scoreboard/_/league/fifa.world",
+     "text": "Scores"
+    },
+    {
+     "rel": [
+      "scores",
+      "sportscenter",
+      "app",
+      "league"
+     ],
+     "href": "sportscenter://x-callback-url/showClubhouse?uid=s:600~l:606&section=scores",
+     "text": "Scores"
+    },
+    {
+     "rel": [
+      "stats",
+      "desktop",
+      "league"
+     ],
+     "href": "https://www.espn.com/soccer/stats/_/league/fifa.world",
+     "text": "Stats"
+    },
+    {
+     "rel": [
+      "stats",
+      "sportscenter",
+      "app",
+      "league"
+     ],
+     "href": "sportscenter://x-callback-url/showClubhouse?uid=s:600~l:606&section=stats",
+     "text": "Stats"
+    },
+    {
+     "rel": [
+      "teams",
+      "desktop",
+      "league"
+     ],
+     "href": "https://www.espn.com/soccer/teams/_/league/fifa.world",
+     "text": "Teams"
+    }
+   ],
+   "logos": [
+    {
+     "href": "https://a.espncdn.com/i/leaguelogos/soccer/500/4.png",
+     "rel": [
+      "full",
+      "default"
+     ]
+    },
+    {
+     "href": "https://a.espncdn.com/i/leaguelogos/soccer/500-dark/4.png",
+     "rel": [
+      "full",
+      "dark"
+     ]
+    }
+   ]
+  },
+  "linksv4": [
+   {
+    "rel": [
+     "summary",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/match/_/gameId/760415/south-africa-mexico",
+    "text": "Gamecast",
+    "shortText": "Summary",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "recap",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/report/_/gameId/760415",
+    "text": "Recap",
+    "shortText": "Recap",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "teamstats",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/team-stats/_/gameId/760415",
+    "text": "Team Stats",
+    "shortText": "Team Stats",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "playerstats",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/player-stats/_/gameId/760415",
+    "text": "Player Stats",
+    "shortText": "Player Stats",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "commentary",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/commentary/_/gameId/760415",
+    "text": "Commentary",
+    "shortText": "Commentary",
+    "isExternal": false,
+    "isPremium": false
+   },
+   {
+    "rel": [
+     "videos",
+     "desktop",
+     "event"
+    ],
+    "href": "https://www.espn.com/soccer/video/_/gameId/760415",
+    "text": "Videos",
+    "shortText": "Videos",
+    "isExternal": false,
+    "isPremium": false
+   }
+  ]
+ },
+ "keyEvents": [
+  {
+   "id": "49483569",
+   "type": {
+    "id": "80",
+    "text": "Kickoff",
+    "type": "kickoff"
+   },
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 0.0,
+    "displayValue": ""
+   },
+   "scoringPlay": false,
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T19:05:57Z",
+   "shootout": false
+  },
+  {
+   "id": "49483413",
+   "type": {
+    "id": "70",
+    "text": "Goal",
+    "type": "goal"
+   },
+   "text": "Goal! Mexico 1, South Africa 0. Juli\u00e1n Qui\u00f1ones (Mexico) right footed shot from the centre of the box to the centre of the goal. Assisted by \u00c9rik Lira.",
+   "shortText": "Juli\u00e1n Qui\u00f1ones Goal",
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 513.0,
+    "displayValue": "9'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "233075",
+      "displayName": "Juli\u00e1n Qui\u00f1ones"
+     }
+    },
+    {
+     "athlete": {
+      "id": "276942",
+      "displayName": "\u00c9rik Lira"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T19:14:30Z",
+   "shootout": false,
+   "goalPositionY": 49.7,
+   "fieldPositionX": 84.4,
+   "fieldPositionY": 56.4,
+   "fieldPosition2X": 100.0,
+   "fieldPosition2Y": 49.7
+  },
+  {
+   "id": "49483541",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Teboho Mokoena (South Africa) is shown the yellow card for a bad foul.",
+   "shortText": "Teboho Mokoena Yellow Card",
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 981.0,
+    "displayValue": "17'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "256691",
+      "displayName": "Teboho Mokoena"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T19:22:18Z",
+   "shootout": false
+  },
+  {
+   "id": "49483587",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Brian Guti\u00e9rrez (Mexico) is shown the yellow card for a bad foul.",
+   "shortText": "Brian Guti\u00e9rrez Yellow Card",
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 1356.0,
+    "displayValue": "23'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "303577",
+      "displayName": "Brian Guti\u00e9rrez"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T19:28:33Z",
+   "shootout": false
+  },
+  {
+   "id": "49483601",
+   "type": {
+    "id": "129",
+    "text": "Start Delay",
+    "type": "start-delay"
+   },
+   "text": "Delay in match for a drinks break.",
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 1455.0,
+    "displayValue": "25'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T19:30:11Z",
+   "shootout": false
+  },
+  {
+   "id": "49483602",
+   "type": {
+    "id": "129",
+    "text": "Start Delay",
+    "type": "start-delay"
+   },
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 1455.0,
+    "displayValue": "25'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T19:30:12Z",
+   "shootout": false
+  },
+  {
+   "id": "49483603",
+   "type": {
+    "id": "130",
+    "text": "End Delay",
+    "type": "end-delay"
+   },
+   "text": "Delay over. They are ready to continue.",
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 1613.0,
+    "displayValue": "27'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T19:32:50Z",
+   "shootout": false
+  },
+  {
+   "id": "49483604",
+   "type": {
+    "id": "130",
+    "text": "End Delay",
+    "type": "end-delay"
+   },
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 1613.0,
+    "displayValue": "27'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T19:32:51Z",
+   "shootout": false
+  },
+  {
+   "id": "49483962",
+   "type": {
+    "id": "81",
+    "text": "Halftime",
+    "type": "halftime"
+   },
+   "text": "First Half ends, Mexico 1, South Africa 0.",
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 2700.0,
+    "displayValue": "45'+4'"
+   },
+   "scoringPlay": false,
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T19:54:57Z",
+   "shootout": false
+  },
+  {
+   "id": "49483976",
+   "type": {
+    "id": "82",
+    "text": "Start 2nd Half",
+    "type": "start-2nd-half"
+   },
+   "text": "Second Half begins Mexico 1, South Africa 0.",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 2700.0,
+    "displayValue": "45'"
+   },
+   "scoringPlay": false,
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:11:31Z",
+   "shootout": false
+  },
+  {
+   "id": "49484043",
+   "type": {
+    "id": "93",
+    "text": "Red Card",
+    "type": "red-card"
+   },
+   "text": "Yaya Sithole (South Africa) is shown the red card.",
+   "shortText": "Sphephelo Sithole Red Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 2940.0,
+    "displayValue": "49'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "228595",
+      "displayName": "Sphephelo Sithole"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:15:31Z",
+   "shootout": false
+  },
+  {
+   "id": "49484117",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Substitution, South Africa. Thalente Mbatha replaces Lyle Foster.",
+   "shortText": "Thalente Mbatha Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 3356.0,
+    "displayValue": "56'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "301321",
+      "displayName": "Thalente Mbatha"
+     }
+    },
+    {
+     "athlete": {
+      "id": "264751",
+      "displayName": "Lyle Foster"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:22:27Z",
+   "shootout": false
+  },
+  {
+   "id": "49484186",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Substitution, South Africa. Themba Zwane replaces Jayden Adams.",
+   "shortText": "Themba Zwane Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 3657.0,
+    "displayValue": "61'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "157046",
+      "displayName": "Themba Zwane"
+     }
+    },
+    {
+     "athlete": {
+      "id": "304736",
+      "displayName": "Jayden Adams"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:27:29Z",
+   "shootout": false
+  },
+  {
+   "id": "49484243",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Substitution, Mexico. Luis Ch\u00e1vez replaces Brian Guti\u00e9rrez.",
+   "shortText": "Luis Ch\u00e1vez Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 3928.0,
+    "displayValue": "66'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "104497",
+      "displayName": "Luis Ch\u00e1vez"
+     }
+    },
+    {
+     "athlete": {
+      "id": "303577",
+      "displayName": "Brian Guti\u00e9rrez"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:32:00Z",
+   "shootout": false
+  },
+  {
+   "id": "49484244",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Substitution, Mexico. Gilberto Mora replaces \u00c1lvaro Fidalgo.",
+   "shortText": "Gilberto Mora Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 3932.0,
+    "displayValue": "66'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "389575",
+      "displayName": "Gilberto Mora"
+     }
+    },
+    {
+     "athlete": {
+      "id": "283827",
+      "displayName": "\u00c1lvaro Fidalgo"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:32:03Z",
+   "shootout": false
+  },
+  {
+   "id": "49484266",
+   "type": {
+    "id": "137",
+    "text": "Goal - Header",
+    "type": "goal---header"
+   },
+   "text": "Goal! Mexico 2, South Africa 0. Ra\u00fal Jim\u00e9nez (Mexico) header from very close range to the bottom left corner. Assisted by Roberto Alvarado with a cross.",
+   "shortText": "Ra\u00fal Jim\u00e9nez Goal - Header",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 3996.0,
+    "displayValue": "67'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "167060",
+      "displayName": "Ra\u00fal Jim\u00e9nez"
+     }
+    },
+    {
+     "athlete": {
+      "id": "194308",
+      "displayName": "Roberto Alvarado"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:33:07Z",
+   "shootout": false,
+   "goalPositionY": 53.0,
+   "fieldPositionX": 95.4,
+   "fieldPositionY": 53.0,
+   "fieldPosition2X": 100.0,
+   "fieldPosition2Y": 53.0
+  },
+  {
+   "id": "49484269",
+   "type": {
+    "id": "129",
+    "text": "Start Delay",
+    "type": "start-delay"
+   },
+   "text": "Delay in match for a drinks break.",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4066.0,
+    "displayValue": "68'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:34:17Z",
+   "shootout": false
+  },
+  {
+   "id": "49484268",
+   "type": {
+    "id": "129",
+    "text": "Start Delay",
+    "type": "start-delay"
+   },
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4066.0,
+    "displayValue": "68'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:34:17Z",
+   "shootout": false
+  },
+  {
+   "id": "49484274",
+   "type": {
+    "id": "130",
+    "text": "End Delay",
+    "type": "end-delay"
+   },
+   "text": "Delay over. They are ready to continue.",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4162.0,
+    "displayValue": "70'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:35:53Z",
+   "shootout": false
+  },
+  {
+   "id": "49484271",
+   "type": {
+    "id": "130",
+    "text": "End Delay",
+    "type": "end-delay"
+   },
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4162.0,
+    "displayValue": "70'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:35:53Z",
+   "shootout": false
+  },
+  {
+   "id": "49484314",
+   "type": {
+    "id": "129",
+    "text": "Start Delay",
+    "type": "start-delay"
+   },
+   "text": "Delay in match because of an injury Ra\u00fal Jim\u00e9nez (Mexico).",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4349.0,
+    "displayValue": "73'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:39:00Z",
+   "shootout": false
+  },
+  {
+   "id": "49484313",
+   "type": {
+    "id": "129",
+    "text": "Start Delay",
+    "type": "start-delay"
+   },
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4349.0,
+    "displayValue": "73'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:39:01Z",
+   "shootout": false
+  },
+  {
+   "id": "49484317",
+   "type": {
+    "id": "130",
+    "text": "End Delay",
+    "type": "end-delay"
+   },
+   "text": "Delay over. They are ready to continue.",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4377.0,
+    "displayValue": "73'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:39:28Z",
+   "shootout": false
+  },
+  {
+   "id": "49484316",
+   "type": {
+    "id": "130",
+    "text": "End Delay",
+    "type": "end-delay"
+   },
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4377.0,
+    "displayValue": "73'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:39:28Z",
+   "shootout": false
+  },
+  {
+   "id": "49484324",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Nkosinathi Sibisi (South Africa) is shown the yellow card for a bad foul.",
+   "shortText": "Nkosinathi Sibisi Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4396.0,
+    "displayValue": "74'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "266125",
+      "displayName": "Nkosinathi Sibisi"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:39:47Z",
+   "shootout": false
+  },
+  {
+   "id": "49484359",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Substitution, Mexico. Edson \u00c1lvarez replaces \u00c9rik Lira.",
+   "shortText": "Edson \u00c1lvarez Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4537.0,
+    "displayValue": "76'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "241627",
+      "displayName": "Edson \u00c1lvarez"
+     }
+    },
+    {
+     "athlete": {
+      "id": "276942",
+      "displayName": "\u00c9rik Lira"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:42:08Z",
+   "shootout": false
+  },
+  {
+   "id": "49484360",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Substitution, Mexico. Armando Gonz\u00e1lez replaces Ra\u00fal Jim\u00e9nez.",
+   "shortText": "Armando Gonz\u00e1lez Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4547.0,
+    "displayValue": "76'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "376110",
+      "displayName": "Armando Gonz\u00e1lez"
+     }
+    },
+    {
+     "athlete": {
+      "id": "167060",
+      "displayName": "Ra\u00fal Jim\u00e9nez"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:42:17Z",
+   "shootout": false
+  },
+  {
+   "id": "49484361",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Substitution, South Africa. Evidence Makgopa replaces Iqraam Rayners.",
+   "shortText": "Evidence Makgopa Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4557.0,
+    "displayValue": "76'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "303312",
+      "displayName": "Evidence Makgopa"
+     }
+    },
+    {
+     "athlete": {
+      "id": "291141",
+      "displayName": "Iqraam Rayners"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:42:27Z",
+   "shootout": false
+  },
+  {
+   "id": "49484362",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Substitution, South Africa. Oswin Appollis replaces Aubrey Modiba.",
+   "shortText": "Oswin Appollis Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4573.0,
+    "displayValue": "77'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "288771",
+      "displayName": "Oswin Appollis"
+     }
+    },
+    {
+     "athlete": {
+      "id": "223818",
+      "displayName": "Aubrey Modiba"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:42:44Z",
+   "shootout": false
+  },
+  {
+   "id": "49484390",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Substitution, Mexico. Alexis Vega replaces Juli\u00e1n Qui\u00f1ones.",
+   "shortText": "Alexis Vega Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4698.0,
+    "displayValue": "79'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "229487",
+      "displayName": "Alexis Vega"
+     }
+    },
+    {
+     "athlete": {
+      "id": "233075",
+      "displayName": "Juli\u00e1n Qui\u00f1ones"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:44:49Z",
+   "shootout": false
+  },
+  {
+   "id": "49484422",
+   "type": {
+    "id": "129",
+    "text": "Start Delay",
+    "type": "start-delay"
+   },
+   "text": "Delay in match because of an injury Roberto Alvarado (Mexico).",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4815.0,
+    "displayValue": "81'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:46:46Z",
+   "shootout": false
+  },
+  {
+   "id": "49484421",
+   "type": {
+    "id": "129",
+    "text": "Start Delay",
+    "type": "start-delay"
+   },
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4815.0,
+    "displayValue": "81'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:46:46Z",
+   "shootout": false
+  },
+  {
+   "id": "49484423",
+   "type": {
+    "id": "130",
+    "text": "End Delay",
+    "type": "end-delay"
+   },
+   "text": "Delay over. They are ready to continue.",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4852.0,
+    "displayValue": "81'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:47:22Z",
+   "shootout": false
+  },
+  {
+   "id": "49484424",
+   "type": {
+    "id": "130",
+    "text": "End Delay",
+    "type": "end-delay"
+   },
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4852.0,
+    "displayValue": "81'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:47:23Z",
+   "shootout": false
+  },
+  {
+   "id": "49484425",
+   "type": {
+    "id": "129",
+    "text": "Start Delay",
+    "type": "start-delay"
+   },
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4906.0,
+    "displayValue": "82'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:48:18Z",
+   "shootout": false
+  },
+  {
+   "id": "49484427",
+   "type": {
+    "id": "130",
+    "text": "End Delay",
+    "type": "end-delay"
+   },
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4985.0,
+    "displayValue": "84'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:49:36Z",
+   "shootout": false
+  },
+  {
+   "id": "49484429",
+   "type": {
+    "id": "93",
+    "text": "Red Card",
+    "type": "red-card"
+   },
+   "text": "Themba Zwane (South Africa) is shown the red card for violent conduct.",
+   "shortText": "Themba Zwane Red Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5003.0,
+    "displayValue": "84'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "467",
+    "displayName": "South Africa"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "157046",
+      "displayName": "Themba Zwane"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:49:55Z",
+   "shootout": false
+  },
+  {
+   "id": "49484548",
+   "type": {
+    "id": "93",
+    "text": "Red Card",
+    "type": "red-card"
+   },
+   "text": "C\u00e9sar Montes (Mexico) is shown the red card.",
+   "shortText": "C\u00e9sar Montes Red Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5400.0,
+    "displayValue": "90'+2'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "203",
+    "displayName": "Mexico"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "224323",
+      "displayName": "C\u00e9sar Montes"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T20:57:57Z",
+   "shootout": false
+  },
+  {
+   "id": "49484603",
+   "type": {
+    "id": "83",
+    "text": "End Regular Time",
+    "type": "end-regular-time"
+   },
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5400.0,
+    "displayValue": "90'+8'"
+   },
+   "scoringPlay": false,
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-06-11T21:03:44Z",
+   "shootout": false
+  }
+ ]
+}

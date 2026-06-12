@@ -7,8 +7,17 @@ project borrows from.
 
 ## Status
 
-Greenfield. This repo currently contains the matrix-display reference material
-copied from travis-tracker (see below); no tracker code exists yet.
+Working end-to-end (2026-06-12): a supervised Elixir OTP app polls ESPN's
+unauthenticated API (FIFA's as fallback — `docs/2026-06-12-data-source-research.md`),
+normalizes matches into a Store with goal edge-detection, builds display
+snapshots, renders the three boards from the design handoff
+(`reference/worldcup-design/`), and serves device frames at
+`GET /matrix.rgb565` (Bandit on `0.0.0.0:4400`, ETag + adaptive
+`X-Poll-Seconds`). `GET /preview.rgb565` serves the raw-sRGB frame for
+`tools/matrix_sim.py`; `GET /healthz` reports store freshness.
+
+Run it: `mix deps.get && mix run --no-halt`, then point the panel (or curl)
+at `http://ryan-claw:4400/matrix.rgb565`.
 
 ## Display hardware & architecture (inherited from travis-tracker)
 
@@ -65,12 +74,27 @@ Copied 2026-06-12 from travis-tracker @ `8c60f50`.
 - `.tool-versions` pins Elixir/Erlang (matching travis-tracker) on the
   assumption this will also be a Phoenix app; change it if the stack changes.
 
-## Next steps (not started)
+## Next steps / known gaps
 
-- Pick a World Cup schedule/live-score data source (e.g. football-data.org,
-  API-Football, FIFA's unofficial endpoints) and check rate limits against the
-  device's 15–60 s poll cadence.
-- Decide the serving model (own app vs. travis-tracker integration — see
-  "One device, one URL").
-- Design the boards: upcoming-fixtures slide, live-match slide (score, clock,
-  scorers ticker via scroll trailer), group standings, knockout bracket.
+- **Verify live-window API behavior** — ESPN `in`-state shape, FIFA live
+  `MatchStatus`/`Period`, halftime strings. Probe tool:
+  `tools/wc_data_probe.py`; run it during any live match.
+- **Flags cover 22 of 48 teams.** The design handoff defines 22 flag
+  samplers; everyone else (BIH, PAR, QAT, HAI, CUW, CPV, …) renders the grey
+  placeholder checker. Needs more samplers (or a codes-only fallback policy).
+- **Goal-burst cadence needs a firmware tweak.** The server sends
+  `X-Poll-Seconds: 0.3` during the goal celebration per the design, but
+  `firmware/matrixportal-arduino/src/main.cpp` parses the header with
+  `toInt()` + `max(5, …)`, so fractional bursts are ignored. Needs float
+  parse + lower clamp before the celebration animates on hardware.
+- **Marquee as trailer scroll strip** (design follow-up): extend
+  `Matrix.Trailer` to 2× font strips so the GOOOL marquee scrolls smoothly
+  on-device between polls.
+- **Now & Next with zero live matches** still shows the `LIVE` header over an
+  empty section (design assumed ≥1 live row). Cosmetic; decide what idle
+  should look like.
+- **FIFA fallback isn't wired into the Poller** — `WorldCupTracker.Fifa` is
+  implemented and tested but the Poller only uses the ESPN source today.
+- Decide the device cutover (point the panel's `MATRIX_URL` here vs.
+  travis-tracker proxying — see "One device, one URL").
+- Standings/bracket boards (data is already in the Store; no renderer yet).

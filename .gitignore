@@ -11,3 +11,4 @@ firmware/matrixportal-arduino/src/secrets.h
 /doc/
 erl_crash.dump
 *.ez
+world_cup_tracker-*.tar
