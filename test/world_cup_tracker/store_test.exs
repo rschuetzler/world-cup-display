@@ -105,6 +105,22 @@ defmodule WorldCupTracker.StoreTest do
 
       assert ["soon", "later"] = store |> Store.next_matches(2) |> Enum.map(& &1.id)
     end
+
+    test "keeps a just-kicked-off match the feed still calls scheduled" do
+      store = start_store()
+
+      :ok =
+        Store.put_schedule(store, [
+          # Kicked off 2 min ago but ESPN/FIFA haven't flipped it to :live yet.
+          build_match("kicking_off", kickoff: in_minutes(-2)),
+          build_match("upcoming", kickoff: in_minutes(45)),
+          # Past the grace window — a postponement shouldn't haunt the board.
+          build_match("stale", kickoff: in_minutes(-30))
+        ])
+
+      assert ["kicking_off", "upcoming"] =
+               store |> Store.next_matches(5) |> Enum.map(& &1.id)
+    end
   end
 
   describe "standings" do

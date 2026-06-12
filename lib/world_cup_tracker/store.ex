@@ -32,6 +32,11 @@ defmodule WorldCupTracker.Store do
   # plausible post-game hold config, short enough to stay tiny.
   @finished_retention_ms 60 * 60 * 1000
   @live_states [:live, :halftime]
+  # A match whose kickoff has passed but the feed still reports `:scheduled`
+  # (the "kicked off, not yet flagged live" gap) stays in `next_matches` for
+  # this grace window so it keeps being featured (as "SOON") instead of
+  # vanishing. Mirrors the poller's ±15-min `soon` cadence window.
+  @kickoff_grace_ms 15 * 60 * 1000
   @empty_last_updated %{schedule: nil, today: nil, standings: nil}
 
   @type goal_event :: %{
@@ -93,16 +98,23 @@ defmodule WorldCupTracker.Store do
     store |> schedule() |> Enum.filter(&(&1.state in @live_states))
   end
 
-  @doc "The next `n` `:scheduled` matches with kickoff at or after now."
+  @doc """
+  The next `n` `:scheduled` matches, soonest first.
+
+  Includes a match whose kickoff passed up to #{div(@kickoff_grace_ms, 60_000)}
+  minutes ago but the feed still calls `:scheduled` — the gap between the clock
+  hitting kickoff and the source flipping the match to `:live` — so it stays
+  featured (rendered as "SOON") rather than dropping off the board.
+  """
   @spec next_matches(atom(), non_neg_integer()) :: [Match.t()]
   def next_matches(store \\ __MODULE__, n) when is_integer(n) and n >= 0 do
-    now = DateTime.utc_now()
+    cutoff = DateTime.add(DateTime.utc_now(), -@kickoff_grace_ms, :millisecond)
 
     store
     |> schedule()
     |> Enum.filter(fn match ->
       match.state == :scheduled and match.kickoff != nil and
-        DateTime.compare(match.kickoff, now) != :lt
+        DateTime.compare(match.kickoff, cutoff) != :lt
     end)
     |> Enum.take(n)
   end
