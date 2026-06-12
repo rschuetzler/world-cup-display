@@ -1,0 +1,13 @@
+# PlatformIO build artifacts
+firmware/matrixportal-arduino/.pio/
+
+# Wi-Fi credentials + device URL (copy from secrets.h.example)
+firmware/matrixportal-arduino/src/secrets.h
+
+# Elixir (once the app exists)
+/_build/
+/deps/
+/cover/
+/doc/
+erl_crash.dump
+*.ez
