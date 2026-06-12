@@ -32,8 +32,10 @@ defmodule WorldCupTracker.Display.State do
   @default_final_hold_ms 20 * 60 * 1000
 
   # Now & Next draws live rows at y=10/y=20 and next rows at y=39/48/57.
+  # Idle (no live rows) it features the first next kickoff as a hero up top
+  # and the remaining three below — so it wants up to 4 next matches.
   @max_live_rows 2
-  @next_count 3
+  @next_count 4
 
   @typedoc "Snapshot consumed by `WorldCupTracker.Matrix.WcRenderers.render/1`."
   @type snapshot :: map()

@@ -94,11 +94,27 @@ defmodule WorldCupTracker.Matrix.WcRenderers do
 
     fb = now_next_header(fb, snap)
 
-    # live rows: flag · code · score · code · flag · minute
-    fb =
-      snap.live
-      |> Enum.with_index()
-      |> Enum.reduce(fb, fn {m, i}, acc -> now_next_live_row(acc, m, 10 + i * 10, now, f?) end)
+    # Idle (no live matches) with a next kickoff cached: the empty y=9..29
+    # band features that match as a big-flag hero, and the NEXT rows below
+    # show the kickoffs AFTER it. With live rows up top the band belongs to
+    # them and the NEXT rows are simply the next three kickoffs. Either way
+    # at most three rows are drawn — a 4-deep next list never runs off-panel.
+    idle_hero? = snap.live == [] and snap.next != []
+
+    {fb, rows} =
+      if idle_hero? do
+        {idle_hero(fb, hd(snap.next), now, tz, f?), snap.next |> Enum.drop(1) |> Enum.take(3)}
+      else
+        # live rows: flag · code · score · code · flag · minute
+        fb =
+          snap.live
+          |> Enum.with_index()
+          |> Enum.reduce(fb, fn {m, i}, acc ->
+            now_next_live_row(acc, m, 10 + i * 10, now, f?)
+          end)
+
+        {fb, Enum.take(snap.next, 3)}
+      end
 
     # divider + NEXT label
     label_end = 4 + Font.text_w("NEXT") + 4
@@ -115,10 +131,10 @@ defmodule WorldCupTracker.Matrix.WcRenderers do
     home_x = if f?, do: 16, else: 3
     home_end = home_x + code_w
 
-    # Enum.max default: an empty next list (cold start, tournament over) must
-    # render a valid frame, not crash the serving layer.
+    # Enum.max default: an empty row list (cold start, tournament over, or a
+    # lone hero match) must render a valid frame, not crash the serving layer.
     max_time_w =
-      snap.next
+      rows
       |> Enum.map(fn m -> ko_w(ko(m.kickoff_utc, m[:tz] || tz, now), gap) end)
       |> Enum.max(fn -> 0 end)
 
@@ -136,7 +152,7 @@ defmodule WorldCupTracker.Matrix.WcRenderers do
     away_start = away_code_right - code_w
     v_x = div(home_end + away_start - Font.text_w("V"), 2)
 
-    snap.next
+    rows
     |> Enum.with_index()
     |> Enum.reduce(fb, fn {m, i}, acc ->
       ny = 39 + i * 9
@@ -161,6 +177,52 @@ defmodule WorldCupTracker.Matrix.WcRenderers do
         do: Font.text_right(acc, 124 - Font.text_w(cl) - gap, ny, wd, pal(:dim)),
         else: acc
     end)
+  end
+
+  # The featured next kickoff, drawn in the y=9..29 band the live rows would
+  # otherwise occupy: a 26×17 flag per side at the live board's hero geometry
+  # (x=6 and x=122-26), with two lines centred on x=64 between them —
+  # "HOME V AWAY" (codes white, V dim) over the kickoff label (gold time,
+  # dim weekday when it isn't today). `flags: false` keeps the same two
+  # centred lines with no flags (the codes-only hero fallback).
+  defp idle_hero(fb, m, now, tz, f?) do
+    {fw, fh, fy} = {26, 17, 10}
+
+    fb =
+      if f? do
+        fb
+        |> Flags.draw(6, fy, fw, fh, m.home)
+        |> Flags.draw(122 - fw, fy, fw, fh, m.away)
+      else
+        fb
+      end
+
+    # line 1: "HOME V AWAY" on the shared 6px-per-char advance, centred as one
+    # string so the V lands exactly between the codes.
+    x0 = round(64 - Font.text_w(m.home <> " V " <> m.away) / 2)
+
+    fb =
+      fb
+      |> Font.text(x0, 12, m.home, pal(:wc_white))
+      |> Font.text(x0 + text_adv(m.home <> " "), 12, "V", pal(:dim))
+      |> Font.text(x0 + text_adv(m.home <> " V "), 12, m.away, pal(:wc_white))
+
+    # line 2: the kickoff label, centred as a single unit — bare gold HH:MM
+    # when it's today, dim weekday + tight 2px gap + gold time otherwise.
+    gap = 2
+    time = ko(m.kickoff_utc, m[:tz] || tz, now)
+
+    case String.split(time, " ", parts: 2) do
+      [cl] ->
+        Font.text_center(fb, 64, 21, cl, pal(:gold))
+
+      [wd, cl] ->
+        tx = round(64 - ko_w(time, gap) / 2)
+
+        fb
+        |> Font.text(tx, 21, wd, pal(:dim))
+        |> Font.text(tx + Font.text_w(wd) + gap, 21, cl, pal(:gold))
+    end
   end
 
   # Header at y=1. With live matches: pulsing dot + LIVE, exactly as the

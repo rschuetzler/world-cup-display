@@ -97,6 +97,72 @@ defmodule WorldCupTracker.Matrix.WcRenderersTest do
     end
   end
 
+  describe ":now_next idle hero" do
+    # Hero geometry: 26×17 flags at x=6..31 and x=96..121, y=10..26, with the
+    # centred text lines between them (codes at y=12, kickoff at y=21).
+    @hero_text_colors [Palette.color(:wc_white), Palette.color(:gold), Palette.color(:dim)]
+
+    defp hero_band(fb), do: Enum.filter(fb.px, fn {{_x, y}, _c} -> y in 9..29 end)
+
+    defp in_hero_flag?(x, y), do: y in 10..26 and (x in 6..31 or x in 96..121)
+
+    test "flags fill both hero rects; between them only the centred text" do
+      fb = WcRenderers.render(DisplayFixtures.now_next_idle())
+      band = hero_band(fb)
+
+      assert Enum.any?(band, fn {{x, y}, _c} -> y in 10..26 and x in 6..31 end)
+      assert Enum.any?(band, fn {{x, y}, _c} -> y in 10..26 and x in 96..121 end)
+
+      outside = Enum.reject(band, fn {{x, y}, _c} -> in_hero_flag?(x, y) end)
+      assert outside != []
+      assert Enum.all?(outside, fn {{_x, _y}, c} -> c in @hero_text_colors end)
+    end
+
+    test "white codes and a gold kickoff time in the centre column" do
+      fb = WcRenderers.render(DisplayFixtures.now_next_idle())
+      white = Palette.color(:wc_white)
+      gold = Palette.color(:gold)
+
+      assert Enum.any?(fb.px, fn {{x, y}, c} -> c == white and x in 32..95 and y in 12..18 end)
+      assert Enum.any?(fb.px, fn {{x, y}, c} -> c == gold and x in 32..95 and y in 21..27 end)
+    end
+
+    test "flags: false keeps the centred hero lines with no flag rects" do
+      snap = Map.put(DisplayFixtures.now_next_idle(), :flags, false)
+      fb = WcRenderers.render(snap)
+      band = hero_band(fb)
+
+      assert band != []
+      assert Enum.all?(band, fn {{_x, _y}, c} -> c in @hero_text_colors end)
+    end
+
+    test "NEXT rows carry the 2nd-4th matches below the hero" do
+      four = DisplayFixtures.now_next_idle()
+      one = %{four | next: Enum.take(four.next, 1)}
+
+      fb = WcRenderers.render(four)
+      # first NEXT row (the fixture's 2nd match) lands at y=39, the third
+      # (the 4th match) at y=57 — still on-panel
+      assert Enum.any?(fb.px, fn {{_x, y}, _c} -> y in 39..45 end)
+      assert Enum.any?(fb.px, fn {{_x, y}, _c} -> y in 57..63 end)
+
+      refute frame(four) == frame(one)
+    end
+
+    test "a lone next match renders the hero with zero rows beneath" do
+      snap = DisplayFixtures.now_next_idle()
+      snap = %{snap | next: Enum.take(snap.next, 1)}
+
+      bin = frame(snap)
+      assert byte_size(bin) == @frame_bytes
+      refute bin == @black_frame
+
+      # NEXT label + divider end at y=37; the row band stays dark
+      fb = WcRenderers.render(snap)
+      refute Enum.any?(fb.px, fn {{_x, y}, _c} -> y >= 39 end)
+    end
+  end
+
   describe ":live" do
     test "progress fill width tracks the minute" do
       # Rightmost strongly-green pixel on the bar row (trough is faint

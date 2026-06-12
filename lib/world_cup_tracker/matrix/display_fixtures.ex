@@ -46,8 +46,9 @@ defmodule WorldCupTracker.Matrix.DisplayFixtures do
 
   @doc """
   Now & Next board with no live matches: the idle header (kickoff countdown
-  instead of the LIVE pill) over the next three kickoffs — the earliest ~47
-  minutes out, then 3 hours, then a day.
+  instead of the LIVE pill), the earliest kickoff (~47 minutes out) featured
+  as the big-flag hero, and the three kickoffs after it in the NEXT rows —
+  3 hours, a day, and ~26 hours out.
   """
   def now_next_idle(now \\ @default_now) do
     %{
@@ -58,7 +59,8 @@ defmodule WorldCupTracker.Matrix.DisplayFixtures do
       next: [
         %{home: "BRA", away: "ESP", kickoff_utc: now + 47 * @min, tz: "America/New_York"},
         %{home: "ENG", away: "FRA", kickoff_utc: now + 3 * @hr, tz: "America/New_York"},
-        %{home: "NED", away: "GER", kickoff_utc: now + 24 * @hr, tz: "America/New_York"}
+        %{home: "NED", away: "GER", kickoff_utc: now + 24 * @hr, tz: "America/New_York"},
+        %{home: "GER", away: "POR", kickoff_utc: now + 26 * @hr, tz: "America/New_York"}
       ]
     }
   end

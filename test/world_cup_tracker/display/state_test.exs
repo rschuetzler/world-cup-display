@@ -206,7 +206,7 @@ defmodule WorldCupTracker.Display.StateTest do
   end
 
   describe "snapshot/1 integration" do
-    test "no live matches: now & next with empty live and the next 3 kickoffs" do
+    test "no live matches: now & next with empty live and the next 4 kickoffs" do
       store = start_store()
 
       :ok =
@@ -226,7 +226,14 @@ defmodule WorldCupTracker.Display.StateTest do
             home: side("England", "ENG"),
             away: side("France", "FRA")
           ),
-          build_match("4", state: :scheduled, clock: nil, kickoff: in_minutes(400))
+          build_match("4",
+            state: :scheduled,
+            clock: nil,
+            kickoff: in_minutes(400),
+            home: side("Germany", "GER"),
+            away: side("Portugal", "POR")
+          ),
+          build_match("5", state: :scheduled, clock: nil, kickoff: in_minutes(500))
         ])
 
       now = System.system_time(:millisecond)
@@ -234,10 +241,13 @@ defmodule WorldCupTracker.Display.StateTest do
 
       assert %{state: :now_next, now: ^now, tz: "America/Denver", live: []} = snap
 
+      # 4 next matches: the idle board features the first as a hero and rows
+      # the remaining three.
       assert [
                %{home: "USA", away: "MEX"},
                %{home: "BRA", away: "ESP"},
-               %{home: "ENG", away: "FRA"}
+               %{home: "ENG", away: "FRA"},
+               %{home: "GER", away: "POR"}
              ] = snap.next
 
       assert Enum.all?(snap.next, &(is_integer(&1.kickoff_utc) and &1.tz == "America/Denver"))
