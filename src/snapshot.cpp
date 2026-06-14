@@ -49,7 +49,9 @@ Snapshot liveSnapshot(const Match& m, const StoreView& v, int64_t now) {
   s.now = now;
   s.flags = true;
   s.finalHold = false;
-  s.minute = SnapshotBuilder::parseMinute(m.clock);
+  s.ht = m.state == MatchState::Halftime;
+  s.minute = m.minute;
+  s.stoppage = m.stoppage;
   s.hs = score(m.home);
   s.as = score(m.away);
   s.stage = stageLabel(m, v.standings);

@@ -33,7 +33,9 @@ struct Snapshot {
 
   // live / goal (the chosen match, as codes)
   bool finalHold;
+  bool ht;        // halftime
   int minute, hs, as;
+  int stoppage;   // added minutes (the "+N" in "45'+4'"), 0 if none
   String stage, home, away;
   int64_t kickoffMs;
 

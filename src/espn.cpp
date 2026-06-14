@@ -121,12 +121,17 @@ String roundLabel(JsonObjectConst event, JsonObjectConst competition) {
 
 namespace Espn {
 
-MatchState stateFromStatus(const char* state, const char* detail) {
+MatchState stateFromStatus(const char* state, const char* detail, const char* name) {
   if (!state) return MatchState::Scheduled;
   if (strcmp(state, "pre") == 0) return MatchState::Scheduled;
   if (strcmp(state, "post") == 0) return MatchState::Finished;
-  if (strcmp(state, "in") == 0)
-    return containsCI(detail, "halftime") ? MatchState::Halftime : MatchState::Live;
+  if (strcmp(state, "in") == 0) {
+    // ESPN reports halftime as state="in" with name="STATUS_HALFTIME",
+    // description/detail="Halftime"/"HT" — NOT the word "halftime" in `detail`.
+    bool ht = containsCI(name, "halftime") || containsCI(detail, "halftime") ||
+              (detail && strcmp(detail, "HT") == 0);
+    return ht ? MatchState::Halftime : MatchState::Live;
+  }
   return MatchState::Scheduled;
 }
 
@@ -140,6 +145,7 @@ bool parseScoreboard(char* buf, size_t len, std::vector<Match>& out) {
   st["displayClock"] = true;
   st["type"]["state"] = true;
   st["type"]["detail"] = true;
+  st["type"]["name"] = true;
   JsonObject comp = ev["competitions"].add<JsonObject>();
   comp["notes"].add<JsonObject>()["headline"] = true;
   JsonObject cr = comp["competitors"].add<JsonObject>();
@@ -163,7 +169,8 @@ bool parseScoreboard(char* buf, size_t len, std::vector<Match>& out) {
   for (JsonObjectConst event : doc["events"].as<JsonArrayConst>()) {
     JsonObjectConst competition = event["competitions"][0];
     JsonObjectConst status = event["status"];
-    MatchState state = stateFromStatus(status["type"]["state"], status["type"]["detail"]);
+    MatchState state =
+        stateFromStatus(status["type"]["state"], status["type"]["detail"], status["type"]["name"]);
     JsonArrayConst competitors = competition["competitors"];
 
     Match m;
@@ -177,6 +184,13 @@ bool parseScoreboard(char* buf, size_t len, std::vector<Match>& out) {
     // ESPN reports a meaningless "0'" clock pre-match; keep it only otherwise.
     const char* dc = status["displayClock"];
     m.clock = (state == MatchState::Scheduled || !dc) ? String("") : String(dc);
+    // Parse the clock into a base minute and stoppage ("45'+4'" -> 45, 4).
+    if (state != MatchState::Scheduled && dc) {
+      int v;
+      if (parseLeadingInt(dc, v) && v >= 0) m.minute = v;
+      const char* plus = strchr(dc, '+');
+      if (plus && parseLeadingInt(plus + 1, v) && v >= 0) m.stoppage = v;
+    }
     out.push_back(m);
   }
 

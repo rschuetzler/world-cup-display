@@ -27,5 +27,5 @@ bool parseScoreboard(char* buf, size_t len, std::vector<Match>& out);
 bool parseStandings(char* buf, size_t len, std::vector<Group>& out);
 
 // Map an ESPN status state/detail pair to a MatchState (exposed for clarity).
-MatchState stateFromStatus(const char* state, const char* detail);
+MatchState stateFromStatus(const char* state, const char* detail, const char* name);
 }  // namespace Espn

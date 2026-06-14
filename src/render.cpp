@@ -21,12 +21,6 @@ bool blink(int64_t now) { return (now / 600) % 2 == 0; }
 // trailing gap — one more than Font::textW).
 int textAdv(const String& s) { return (int)s.length() * 6; }
 
-String pad2(int n) {
-  char b[8];
-  snprintf(b, sizeof(b), "%02d", n);
-  return String(b);
-}
-
 // Filled disc — port of Glyphs.disc (the dot primitive), r*r + r*0.4 radius.
 void disc(Fb& fb, int cx, int cy, int r, Rgb c, float a = 1.0f) {
   float r2 = r * r + r * 0.4f;
@@ -176,11 +170,14 @@ void nowNext(Fb& fb, const Snapshot& s) {
 }
 
 // ── LIVE ──────────────────────────────────────────────────────────────────
-void liveStatus(Fb& fb, int minute, int64_t now) {
+void liveStatus(Fb& fb, int minute, int stoppage, bool ht, int64_t now) {
   int rx = 124;
-  String min = String(minute) + "'";
-  Font::textRight(fb, rx, 2, min.c_str(), Pal::gold);
-  rx = rx - Font::textW(min.c_str()) - 5;
+  String lbl = ht ? String("HT")
+                  : (stoppage > 0 ? String(minute) + "+" + String(stoppage) + "'"
+                                  : String(minute) + "'");
+  Font::textRight(fb, rx, 2, lbl.c_str(), Pal::gold);
+  if (ht) return;  // paused — no ticking LIVE indicator
+  rx = rx - Font::textW(lbl.c_str()) - 5;
   Font::textRight(fb, rx, 2, "LIVE", Pal::live);
   if (blink(now)) disc(fb, rx - Font::textW("LIVE") - 4, 5, 1, Pal::live);
 }
@@ -216,7 +213,7 @@ void live(Fb& fb, const Snapshot& s) {
   if (finalHold)
     Font::textRight(fb, 124, 2, "FINAL", Pal::win);
   else
-    liveStatus(fb, minute, s.now);
+    liveStatus(fb, minute, s.stoppage, s.ht, s.now);
 
   if (s.flags) {
     const int fw = 26, fh = 17, fy = 11;
@@ -235,11 +232,9 @@ void live(Fb& fb, const Snapshot& s) {
     matchBar(fb, 8, 46, 112, 90, Pal::pitch, false);
     Font::textRight(fb, 120, 54, "FULL TIME", Pal::soft);
   } else {
-    const char* half = minute <= 45 ? "1ST HALF" : "2ND HALF";
-    matchBar(fb, 8, 46, 112, minute, Pal::pitch, true);
-    String clk = String(minute) + ":" + pad2((int)((s.now / 1000) % 60));
-    Font::text(fb, 8, 54, clk.c_str(), Pal::wc_white);
-    Font::textRight(fb, 120, 54, half, Pal::soft);
+    const char* half = s.ht ? "HALF TIME" : (minute <= 45 ? "1ST HALF" : "2ND HALF");
+    matchBar(fb, 8, 46, 112, minute, Pal::pitch, !s.ht);
+    Font::textRight(fb, 120, 54, half, Pal::soft);  // minute shown top-right
   }
 }
 

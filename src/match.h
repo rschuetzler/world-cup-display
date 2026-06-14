@@ -21,7 +21,9 @@ struct Match {
   Side home;
   Side away;
   MatchState state;
-  String clock;  // displayClock, may be empty
+  String clock;     // displayClock, may be empty
+  int minute = 0;   // base minute parsed from clock ("45'+4'" -> 45)
+  int stoppage = 0; // added minutes ("45'+4'" -> 4), 0 if none
 };
 
 inline bool isLiveState(MatchState s) {
