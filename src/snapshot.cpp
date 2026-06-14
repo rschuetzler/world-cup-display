@@ -4,6 +4,7 @@
 namespace {
 const int64_t GOAL_DURATION_MS = 16500;
 const int64_t FINAL_HOLD_MS = 20 * 60 * 1000;
+const int64_t FINAL_ALT_MS = 15000;  // final-hold ⇄ now/next swap period
 const int MAX_LIVE_ROWS = 2;
 
 String upcase(const String& s) {
@@ -132,9 +133,15 @@ Snapshot build(const StoreView& v, int64_t now) {
   if (v.live.empty()) {
     // recently_finished is sorted most-recent-first and already windowed.
     if (!v.finals.empty()) {
-      Snapshot s = liveSnapshot(v.finals[0].match, v, now);
-      s.finalHold = true;
-      return s;
+      // During the final hold, alternate between the FINAL board and the
+      // now/next board every 15s (only swap to now/next when there's actually
+      // an upcoming match to show).
+      bool showNext = !v.next.empty() && (now / FINAL_ALT_MS) % 2 == 1;
+      if (!showNext) {
+        Snapshot s = liveSnapshot(v.finals[0].match, v, now);
+        s.finalHold = true;
+        return s;
+      }
     }
     return nowNextSnapshot(v, now);
   }
