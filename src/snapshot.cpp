@@ -5,7 +5,16 @@ namespace {
 const int64_t GOAL_DURATION_MS = 16500;
 const int64_t FINAL_HOLD_MS = 20 * 60 * 1000;
 const int64_t FINAL_ALT_MS = 15000;  // final-hold ⇄ now/next swap period
+// Two matches count as the same simultaneous slot if their kickoffs fall inside
+// this window — group-stage finales kick two games off together. Used to decide
+// which just-finished match keeps its slot (as FINAL) beside a live partner.
+const int64_t CONCURRENT_WINDOW_MS = 30 * 60 * 1000;
 const int MAX_LIVE_ROWS = 2;
+
+bool concurrent(int64_t a, int64_t b) {
+  int64_t d = a > b ? a - b : b - a;
+  return d <= CONCURRENT_WINDOW_MS;
+}
 
 String upcase(const String& s) {
   String o = s;
@@ -62,21 +71,27 @@ Snapshot liveSnapshot(const Match& m, const StoreView& v, int64_t now) {
   return s;
 }
 
-Snapshot nowNextSnapshot(const StoreView& v, int64_t now) {
+LiveRow liveRow(const Match& m, bool isFinal, int64_t now) {
+  LiveRow r;
+  r.home = code(m.home);
+  r.away = code(m.away);
+  r.hs = score(m.home);
+  r.as = score(m.away);
+  r.kickoffMs = m.hasKickoff ? m.kickoffMs : now;
+  r.ht = m.state == MatchState::Halftime;
+  r.final = isFinal;
+  r.minute = m.minute;
+  r.stoppage = m.stoppage;
+  return r;
+}
+
+Snapshot nowNextSnapshot(const std::vector<LiveRow>& liveRows, const StoreView& v, int64_t now) {
   Snapshot s{};
   s.state = Board::NowNext;
   s.now = now;
   s.flags = true;
-  // No favorite team -> live rows are simply the first two in kickoff order.
-  for (const auto& m : v.live) {
+  for (const auto& r : liveRows) {
     if ((int)s.live.size() >= MAX_LIVE_ROWS) break;
-    LiveRow r;
-    r.home = code(m.home);
-    r.away = code(m.away);
-    r.hs = score(m.home);
-    r.as = score(m.away);
-    r.kickoffMs = m.hasKickoff ? m.kickoffMs : now;
-    r.ht = m.state == MatchState::Halftime;
     s.live.push_back(r);
   }
   for (const auto& m : v.next) {
@@ -128,26 +143,54 @@ Snapshot build(const StoreView& v, int64_t now) {
     }
   }
 
-  if (v.live.size() == 1) return liveSnapshot(v.live[0], v, now);
-
-  if (v.live.empty()) {
-    // recently_finished is sorted most-recent-first and already windowed.
-    if (!v.finals.empty()) {
-      // During the final hold, alternate between the FINAL board and the
-      // now/next board every 15s (only swap to now/next when there's actually
-      // an upcoming match to show).
-      bool showNext = !v.next.empty() && (now / FINAL_ALT_MS) % 2 == 1;
-      if (!showNext) {
-        Snapshot s = liveSnapshot(v.finals[0].match, v, now);
-        s.finalHold = true;
-        return s;
+  // Assemble the "now" rows. Live matches first (this preserves the existing
+  // two-live-games dual board), then fill any remaining slot with a
+  // recently-finished match that was concurrent with the action — so each game
+  // in a simultaneous pair flips to FINAL on its own clock while its partner
+  // keeps playing, and both stay on screen together.
+  std::vector<LiveRow> rows;
+  for (const auto& m : v.live) {
+    if ((int)rows.size() >= MAX_LIVE_ROWS) break;
+    rows.push_back(liveRow(m, false, now));
+  }
+  if ((int)rows.size() < MAX_LIVE_ROWS) {
+    // Concurrency anchor: the live matches if any, else the most-recent final
+    // (v.finals is sorted most-recent-first and already deduped/windowed).
+    bool haveAnchor = false;
+    int64_t anchor = 0;
+    if (!v.live.empty()) { anchor = v.live[0].kickoffMs; haveAnchor = true; }
+    else if (!v.finals.empty()) { anchor = v.finals[0].match.kickoffMs; haveAnchor = true; }
+    if (haveAnchor) {
+      for (const auto& f : v.finals) {
+        if ((int)rows.size() >= MAX_LIVE_ROWS) break;
+        if (concurrent(f.match.kickoffMs, anchor)) rows.push_back(liveRow(f.match, true, now));
       }
     }
-    return nowNextSnapshot(v, now);
   }
 
-  // Several live, no favorite -> now_next.
-  return nowNextSnapshot(v, now);
+  int liveCount = 0, finalCount = 0;
+  for (const auto& r : rows) (r.final ? finalCount : liveCount)++;
+
+  // Two-or-more concurrent games (any mix of live and final) -> dual now/next.
+  if ((int)rows.size() >= 2) return nowNextSnapshot(rows, v, now);
+
+  // Exactly one live game, no finished partner -> single live board.
+  if (liveCount == 1) return liveSnapshot(v.live[0], v, now);
+
+  // No live games, one recent final -> the single FINAL hold board, alternating
+  // with now/next every 15s (only swap when there's an upcoming match to show).
+  // rows[0] (when present) is v.finals[0], the match anchoring the window.
+  if (finalCount == 1) {
+    bool showNext = !v.next.empty() && (now / FINAL_ALT_MS) % 2 == 1;
+    if (!showNext) {
+      Snapshot s = liveSnapshot(v.finals[0].match, v, now);
+      s.finalHold = true;
+      return s;
+    }
+  }
+
+  // Nothing live or recently final (or alternating to it) -> upcoming.
+  return nowNextSnapshot({}, v, now);
 }
 
 }  // namespace SnapshotBuilder

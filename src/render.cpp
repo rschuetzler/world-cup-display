@@ -46,7 +46,10 @@ Rgb codeCol(bool leading) { return leading ? Pal::wc_white : Pal::soft; }
 // ── NOW & NEXT ────────────────────────────────────────────────────────────
 void nowNextHeader(Fb& fb, const Snapshot& s) {
   int64_t now = s.now;
-  if (!s.live.empty()) {
+  bool anyLive = false;
+  for (const auto& r : s.live)
+    if (!r.final) { anyLive = true; break; }
+  if (anyLive) {
     if (blink(now)) disc(fb, 6, 4, 1, Pal::live);
     Font::text(fb, 11, 1, "LIVE", Pal::live);
     Font::textRight(fb, 124, 1, Fmt::weekday(now), Pal::dim);
@@ -89,9 +92,19 @@ void idleHero(Fb& fb, const NextRow& m, int64_t now, bool flags) {
 }
 
 void nowNextLiveRow(Fb& fb, const LiveRow& m, int y, int64_t now, bool flags) {
-  int minute = (int)((now - m.kickoffMs) / 60000);
-  if (minute < 0) minute = 0;
-  String status = m.ht ? String("HT") : String(minute);
+  // Status straight from the API clock — not wall-clock — so it tracks
+  // halftime, stoppage, and each game's independent full time.
+  String status;
+  Rgb statusCol = Pal::gold;
+  if (m.final) {
+    status = "FINAL";
+    statusCol = Pal::win;
+  } else if (m.ht) {
+    status = "HT";
+  } else {
+    status = m.stoppage > 0 ? String(m.minute) + "+" + String(m.stoppage) + "'"
+                            : String(m.minute) + "'";
+  }
   int lead = m.hs > m.as ? 0 : (m.as > m.hs ? 1 : -1);  // 0 home, 1 away, -1 none
   String score = String(m.hs) + "-" + String(m.as);
 
@@ -105,7 +118,7 @@ void nowNextLiveRow(Fb& fb, const LiveRow& m, int y, int64_t now, bool flags) {
   Font::text(fb, x, y, m.away.c_str(), codeCol(lead == 1));
   x += textAdv(m.away) + 2;
   miniFlag(fb, x, y, 10, 7, m.away, flags);
-  Font::textRight(fb, 124, y, status.c_str(), Pal::gold);
+  Font::textRight(fb, 124, y, status.c_str(), statusCol);
 }
 
 void nowNext(Fb& fb, const Snapshot& s) {

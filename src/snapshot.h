@@ -14,7 +14,10 @@ struct LiveRow {
   String home, away;  // codes
   int hs, as;
   int64_t kickoffMs;
-  bool ht;
+  bool ht;          // halftime
+  bool final;       // game over -> show FINAL instead of a running clock
+  int minute;       // API base minute ("45'+4'" -> 45)
+  int stoppage;     // API added minutes ("45'+4'" -> 4), 0 if none
 };
 
 struct NextRow {
