@@ -43,6 +43,34 @@ int koW(const Fmt::Ko& k, int gap) {
 
 Rgb codeCol(bool leading) { return leading ? Pal::wc_white : Pal::soft; }
 
+// True once a match is into extra time (period 3/4, or the clock has run past
+// regulation — ESPN keeps counting "91'".."120'" rather than restarting).
+bool inExtraTime(int minute, int period) { return period >= 3 || minute > 90; }
+bool inPenalties(int period) { return period >= 5; }
+
+// Short status chip shown top-right of the live board / now-next row.
+String statusChip(int minute, int stoppage, int period, bool paused) {
+  if (inPenalties(period)) return String("PENS");
+  if (paused) return minute < 60 ? String("HT") : String("ET");
+  return stoppage > 0 ? String(minute) + "+" + String(stoppage) + "'"
+                      : String(minute) + "'";
+}
+
+// Long phase label shown bottom-right of the single live board. Breaks are
+// classified by the displayClock minute (~45 HT, ~90 end-of-reg, ~105 ET
+// interval, ~120 pre-penalties) so it doesn't depend on ESPN's period numbering
+// for the stopped-clock states.
+const char* phaseLabel(int minute, int period, bool paused) {
+  if (inPenalties(period)) return "PENALTIES";
+  if (paused) {
+    if (minute < 60) return "HALF TIME";
+    if (minute < 105) return "EXTRA TIME";  // end of regulation, or ET interval
+    return "PENALTIES";                      // after the second ET period
+  }
+  if (inExtraTime(minute, period)) return "EXTRA TIME";
+  return minute <= 45 ? "1ST HALF" : "2ND HALF";
+}
+
 // ── NOW & NEXT ────────────────────────────────────────────────────────────
 void nowNextHeader(Fb& fb, const Snapshot& s) {
   int64_t now = s.now;
@@ -99,11 +127,8 @@ void nowNextLiveRow(Fb& fb, const LiveRow& m, int y, int64_t now, bool flags) {
   if (m.final) {
     status = "FINAL";
     statusCol = Pal::win;
-  } else if (m.ht) {
-    status = "HT";
   } else {
-    status = m.stoppage > 0 ? String(m.minute) + "+" + String(m.stoppage) + "'"
-                            : String(m.minute) + "'";
+    status = statusChip(m.minute, m.stoppage, m.period, m.paused);
   }
   int lead = m.hs > m.as ? 0 : (m.as > m.hs ? 1 : -1);  // 0 home, 1 away, -1 none
   String score = String(m.hs) + "-" + String(m.as);
@@ -183,13 +208,11 @@ void nowNext(Fb& fb, const Snapshot& s) {
 }
 
 // ── LIVE ──────────────────────────────────────────────────────────────────
-void liveStatus(Fb& fb, int minute, int stoppage, bool ht, int64_t now) {
+void liveStatus(Fb& fb, int minute, int stoppage, int period, bool paused, int64_t now) {
   int rx = 124;
-  String lbl = ht ? String("HT")
-                  : (stoppage > 0 ? String(minute) + "+" + String(stoppage) + "'"
-                                  : String(minute) + "'");
+  String lbl = statusChip(minute, stoppage, period, paused);
   Font::textRight(fb, rx, 2, lbl.c_str(), Pal::gold);
-  if (ht) return;  // paused — no ticking LIVE indicator
+  if (paused) return;  // clock stopped — no ticking LIVE indicator
   rx = rx - Font::textW(lbl.c_str()) - 5;
   Font::textRight(fb, rx, 2, "LIVE", Pal::live);
   if (blink(now)) disc(fb, rx - Font::textW("LIVE") - 4, 5, 1, Pal::live);
@@ -203,9 +226,10 @@ void heroScore(Fb& fb, int y, const String& home, const String& away, const Stri
   Geist::bigCenter(fb, 64, y - 2, score.c_str(), 18, scoreCol);
 }
 
-// Match-progress bar (0..90); faint trough + pitch fill; ball head unless final.
-void matchBar(Fb& fb, int x, int y, int w, int minute, Rgb color, bool ball) {
-  float pct = minute / 90.0f;
+// Match-progress bar (0..maxMinute); faint trough + pitch fill; ball head
+// unless final. maxMinute is 90 in regulation, 120 once into extra time.
+void matchBar(Fb& fb, int x, int y, int w, int minute, Rgb color, bool ball, int maxMinute = 90) {
+  float pct = minute / (float)maxMinute;
   if (pct < 0) pct = 0;
   if (pct > 1) pct = 1;
   for (int i = 0; i < w; i++) fb.add(x + i, y, Pal::faint, 1);
@@ -217,7 +241,8 @@ void matchBar(Fb& fb, int x, int y, int w, int minute, Rgb color, bool ball) {
 
 void live(Fb& fb, const Snapshot& s) {
   bool finalHold = s.finalHold;
-  int minute = clampi(s.minute, 0, 95);
+  bool et = inExtraTime(s.minute, s.period);
+  int minute = clampi(s.minute, 0, 130);  // up to 120' + extra-time stoppage
   int hs = clampi(s.hs, 0, 9);
   int as = clampi(s.as, 0, 9);
   String score = String(hs) + "-" + String(as);
@@ -226,7 +251,7 @@ void live(Fb& fb, const Snapshot& s) {
   if (finalHold)
     Font::textRight(fb, 124, 2, "FINAL", Pal::win);
   else
-    liveStatus(fb, minute, s.stoppage, s.ht, s.now);
+    liveStatus(fb, minute, s.stoppage, s.period, s.paused, s.now);
 
   if (s.flags) {
     const int fw = 26, fh = 17, fy = 11;
@@ -245,8 +270,8 @@ void live(Fb& fb, const Snapshot& s) {
     matchBar(fb, 8, 46, 112, 90, Pal::pitch, false);
     Font::textRight(fb, 120, 54, "FULL TIME", Pal::soft);
   } else {
-    const char* half = s.ht ? "HALF TIME" : (minute <= 45 ? "1ST HALF" : "2ND HALF");
-    matchBar(fb, 8, 46, 112, minute, Pal::pitch, !s.ht);
+    const char* half = phaseLabel(s.minute, s.period, s.paused);
+    matchBar(fb, 8, 46, 112, minute, Pal::pitch, !s.paused, et ? 120 : 90);
     Font::textRight(fb, 120, 54, half, Pal::soft);  // minute shown top-right
   }
 }

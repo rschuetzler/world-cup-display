@@ -4,6 +4,10 @@
 #include <Arduino.h>
 #include <stdint.h>
 
+// Halftime here means "any in-progress intermission with the clock stopped" —
+// regulation half-time, end of regulation before extra time, the extra-time
+// interval, and the pause before penalties. The exact phase is derived
+// downstream from `period` and `minute`.
 enum class MatchState { Scheduled, Live, Halftime, Finished };
 
 struct Side {
@@ -24,6 +28,7 @@ struct Match {
   String clock;     // displayClock, may be empty
   int minute = 0;   // base minute parsed from clock ("45'+4'" -> 45)
   int stoppage = 0; // added minutes ("45'+4'" -> 4), 0 if none
+  int period = 0;   // 1 1st half, 2 2nd half, 3/4 extra time, 5 penalties
 };
 
 inline bool isLiveState(MatchState s) {

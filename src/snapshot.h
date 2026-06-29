@@ -14,10 +14,11 @@ struct LiveRow {
   String home, away;  // codes
   int hs, as;
   int64_t kickoffMs;
-  bool ht;          // halftime
+  bool paused;      // clock stopped (half-time / extra-time interval / pre-pens)
   bool final;       // game over -> show FINAL instead of a running clock
   int minute;       // API base minute ("45'+4'" -> 45)
   int stoppage;     // API added minutes ("45'+4'" -> 4), 0 if none
+  int period;       // 1/2 regulation, 3/4 extra time, 5 penalties
 };
 
 struct NextRow {
@@ -36,9 +37,10 @@ struct Snapshot {
 
   // live / goal (the chosen match, as codes)
   bool finalHold;
-  bool ht;        // halftime
+  bool paused;    // clock stopped (half-time / extra-time interval / pre-pens)
   int minute, hs, as;
   int stoppage;   // added minutes (the "+N" in "45'+4'"), 0 if none
+  int period;     // 1/2 regulation, 3/4 extra time, 5 penalties
   String stage, home, away;
   int64_t kickoffMs;
 

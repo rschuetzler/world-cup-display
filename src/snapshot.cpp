@@ -59,9 +59,10 @@ Snapshot liveSnapshot(const Match& m, const StoreView& v, int64_t now) {
   s.now = now;
   s.flags = true;
   s.finalHold = false;
-  s.ht = m.state == MatchState::Halftime;
+  s.paused = m.state == MatchState::Halftime;
   s.minute = m.minute;
   s.stoppage = m.stoppage;
+  s.period = m.period;
   s.hs = score(m.home);
   s.as = score(m.away);
   s.stage = stageLabel(m, v.standings);
@@ -78,10 +79,11 @@ LiveRow liveRow(const Match& m, bool isFinal, int64_t now) {
   r.hs = score(m.home);
   r.as = score(m.away);
   r.kickoffMs = m.hasKickoff ? m.kickoffMs : now;
-  r.ht = m.state == MatchState::Halftime;
+  r.paused = m.state == MatchState::Halftime;
   r.final = isFinal;
   r.minute = m.minute;
   r.stoppage = m.stoppage;
+  r.period = m.period;
   return r;
 }
 

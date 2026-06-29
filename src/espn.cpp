@@ -126,11 +126,15 @@ MatchState stateFromStatus(const char* state, const char* detail, const char* na
   if (strcmp(state, "pre") == 0) return MatchState::Scheduled;
   if (strcmp(state, "post") == 0) return MatchState::Finished;
   if (strcmp(state, "in") == 0) {
-    // ESPN reports halftime as state="in" with name="STATUS_HALFTIME",
-    // description/detail="Halftime"/"HT" — NOT the word "halftime" in `detail`.
-    bool ht = containsCI(name, "halftime") || containsCI(detail, "halftime") ||
-              (detail && strcmp(detail, "HT") == 0);
-    return ht ? MatchState::Halftime : MatchState::Live;
+    // ESPN reports clock-stopped intermissions as state="in": regulation
+    // half-time (name="STATUS_HALFTIME", detail="HT"), end of regulation before
+    // extra time, the extra-time interval, and the pause before penalties — all
+    // carry an "END_OF"/"HALFTIME" name (or detail "HT"). Treat them all as
+    // paused; the phase label is resolved later from period + minute.
+    bool paused = containsCI(name, "halftime") || containsCI(name, "end_of") ||
+                  containsCI(detail, "halftime") || containsCI(detail, "end of") ||
+                  (detail && strcmp(detail, "HT") == 0);
+    return paused ? MatchState::Halftime : MatchState::Live;
   }
   return MatchState::Scheduled;
 }
@@ -143,6 +147,7 @@ bool parseScoreboard(char* buf, size_t len, std::vector<Match>& out) {
   ev["season"]["slug"] = true;
   JsonObject st = ev["status"].to<JsonObject>();
   st["displayClock"] = true;
+  st["period"] = true;
   st["type"]["state"] = true;
   st["type"]["detail"] = true;
   st["type"]["name"] = true;
@@ -179,6 +184,7 @@ bool parseScoreboard(char* buf, size_t len, std::vector<Match>& out) {
     if (!m.hasKickoff) m.kickoffMs = 0;
     m.round = roundLabel(event, competition);
     m.state = state;
+    m.period = status["period"] | 0;
     m.home = parseSide(competitors, "home", state);
     m.away = parseSide(competitors, "away", state);
     // ESPN reports a meaningless "0'" clock pre-match; keep it only otherwise.
