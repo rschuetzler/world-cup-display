@@ -66,6 +66,7 @@ Snapshot liveSnapshot(const Match& m, const StoreView& v, int64_t now) {
   s.hs = score(m.home);
   s.as = score(m.away);
   s.stage = stageLabel(m, v.standings);
+  s.note = m.note;
   s.home = code(m.home);
   s.away = code(m.away);
   s.kickoffMs = m.hasKickoff ? m.kickoffMs : now;

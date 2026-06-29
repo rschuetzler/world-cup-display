@@ -21,7 +21,8 @@ struct Match {
   String id;
   int64_t kickoffMs;  // epoch ms; valid only when hasKickoff
   bool hasKickoff;
-  String round;  // may be empty
+  String round;  // round name, from the season slug (e.g. "Round Of 32")
+  String note;   // result blurb, populated at full time (e.g. "X advance ...")
   Side home;
   Side away;
   MatchState state;

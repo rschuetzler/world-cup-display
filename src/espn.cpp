@@ -107,7 +107,10 @@ Side parseSide(JsonArrayConst competitors, const char* homeAway, MatchState stat
   return s;
 }
 
-String roundLabel(JsonObjectConst event, JsonObjectConst competition) {
+// ESPN leaves competition.notes[].headline empty during play and fills it with
+// a result blurb ("Paraguay advance 4-3 on penalties") at full time — so it's a
+// note, not the round. The round always comes from the season slug.
+String noteHeadline(JsonObjectConst competition) {
   JsonArrayConst notes = competition["notes"];
   if (!notes.isNull()) {
     for (JsonObjectConst n : notes) {
@@ -115,7 +118,7 @@ String roundLabel(JsonObjectConst event, JsonObjectConst competition) {
       if (h && *h) return String(h);
     }
   }
-  return humanizeSlug(event["season"]["slug"]);
+  return String("");
 }
 }  // namespace
 
@@ -182,7 +185,8 @@ bool parseScoreboard(char* buf, size_t len, std::vector<Match>& out) {
     m.id = idToString(event["id"]);
     m.hasKickoff = parseKickoff(event["date"], m.kickoffMs);
     if (!m.hasKickoff) m.kickoffMs = 0;
-    m.round = roundLabel(event, competition);
+    m.round = humanizeSlug(event["season"]["slug"]);
+    m.note = noteHeadline(competition);
     m.state = state;
     m.period = status["period"] | 0;
     m.home = parseSide(competitors, "home", state);

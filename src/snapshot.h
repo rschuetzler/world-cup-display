@@ -42,6 +42,7 @@ struct Snapshot {
   int stoppage;   // added minutes (the "+N" in "45'+4'"), 0 if none
   int period;     // 1/2 regulation, 3/4 extra time, 5 penalties
   String stage, home, away;
+  String note;    // result blurb shown at full time (e.g. "X advance ..."), may be empty
   int64_t kickoffMs;
 
   // goal

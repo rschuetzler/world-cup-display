@@ -235,6 +235,20 @@ void matchBar(Fb& fb, int x, int y, int w, int minute, Rgb color, bool ball, int
   if (ball) disc(fb, x + lit, y, 1, Pal::ball);
 }
 
+// One line, centred if it fits the board, otherwise scrolled as a continuous
+// leftward marquee. Used for the full-time result blurb along the bottom edge.
+void marqueeLine(Fb& fb, int y, const String& s, Rgb col, int64_t now) {
+  int w = Font::textW(s.c_str());
+  if (w <= 124) {
+    Font::textCenter(fb, 64, y, s.c_str(), col);
+    return;
+  }
+  int span = w + 14;                      // text width + gap before it repeats
+  int off = (int)((now / 28) % span);     // ~36 px/s
+  Font::text(fb, -off, y, s.c_str(), col);
+  Font::text(fb, span - off, y, s.c_str(), col);
+}
+
 void live(Fb& fb, const Snapshot& s) {
   bool finalHold = s.finalHold;
   bool et = inExtraTime(s.minute, s.period);
@@ -264,7 +278,13 @@ void live(Fb& fb, const Snapshot& s) {
 
   if (finalHold) {
     matchBar(fb, 8, 46, 112, 90, Pal::pitch, false);
-    Font::textRight(fb, 120, 54, "FULL TIME", Pal::soft);
+    if (s.note.length() > 0) {
+      String note = s.note;
+      note.toUpperCase();
+      marqueeLine(fb, 54, note, Pal::soft, s.now);  // e.g. "PARAGUAY ADVANCE 4-3 ON PENALTIES"
+    } else {
+      Font::textRight(fb, 120, 54, "FULL TIME", Pal::soft);
+    }
   } else {
     const char* half = phaseLabel(s.minute, s.period, s.paused);
     matchBar(fb, 8, 46, 112, minute, Pal::pitch, !s.paused, et ? 120 : 90);
