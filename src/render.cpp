@@ -208,14 +208,13 @@ void nowNext(Fb& fb, const Snapshot& s) {
 }
 
 // ── LIVE ──────────────────────────────────────────────────────────────────
-void liveStatus(Fb& fb, int minute, int stoppage, int period, bool paused, int64_t now) {
+void liveStatus(Fb& fb, int minute, int stoppage, int period, bool paused) {
   int rx = 124;
   String lbl = statusChip(minute, stoppage, period, paused);
   Font::textRight(fb, rx, 2, lbl.c_str(), Pal::gold);
-  if (paused) return;  // clock stopped — no ticking LIVE indicator
+  if (paused) return;  // clock stopped — no LIVE indicator
   rx = rx - Font::textW(lbl.c_str()) - 5;
   Font::textRight(fb, rx, 2, "LIVE", Pal::live);
-  if (blink(now)) disc(fb, rx - Font::textW("LIVE") - 4, 5, 1, Pal::live);
 }
 
 // ORIG s-s DEST hero — codes flank a big centred score (flags-off fallback).
@@ -251,7 +250,7 @@ void live(Fb& fb, const Snapshot& s) {
   if (finalHold)
     Font::textRight(fb, 124, 2, "FINAL", Pal::win);
   else
-    liveStatus(fb, minute, s.stoppage, s.period, s.paused, s.now);
+    liveStatus(fb, minute, s.stoppage, s.period, s.paused);
 
   if (s.flags) {
     const int fw = 26, fh = 17, fy = 11;
