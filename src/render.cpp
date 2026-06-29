@@ -209,12 +209,9 @@ void nowNext(Fb& fb, const Snapshot& s) {
 
 // ── LIVE ──────────────────────────────────────────────────────────────────
 void liveStatus(Fb& fb, int minute, int stoppage, int period, bool paused) {
-  int rx = 124;
+  // The running clock (or HT/ET/PENS chip) is itself the live indicator.
   String lbl = statusChip(minute, stoppage, period, paused);
-  Font::textRight(fb, rx, 2, lbl.c_str(), Pal::gold);
-  if (paused) return;  // clock stopped — no LIVE indicator
-  rx = rx - Font::textW(lbl.c_str()) - 5;
-  Font::textRight(fb, rx, 2, "LIVE", Pal::live);
+  Font::textRight(fb, 124, 2, lbl.c_str(), Pal::gold);
 }
 
 // ORIG s-s DEST hero — codes flank a big centred score (flags-off fallback).
