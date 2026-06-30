@@ -73,6 +73,24 @@ Snapshot liveSnapshot(const Match& m, const StoreView& v, int64_t now) {
   return s;
 }
 
+// A match in a penalty shootout — live (kick-by-kick) or decided (victory).
+Snapshot shootoutSnapshot(const Match& m, const StoreView& v, int64_t now, bool decided) {
+  Snapshot s = liveSnapshot(m, v, now);
+  s.state = Board::Shootout;
+  s.shootoutDecided = decided;
+  s.penHome = m.home.shootoutScore;
+  s.penAway = m.away.shootoutScore;
+  s.kicksHome = m.kicksHome;
+  s.kicksAway = m.kicksAway;
+  return s;
+}
+
+// A shootout board is only worth showing once we actually have a tally or the
+// per-kick data — otherwise fall back to the normal live/final boards.
+bool hasShootoutData(const Match& m) {
+  return m.period >= 5 && (m.hasShootout || m.home.shootoutScore > 0 || m.away.shootoutScore > 0);
+}
+
 LiveRow liveRow(const Match& m, bool isFinal, int64_t now) {
   LiveRow r;
   r.home = code(m.home);
@@ -146,6 +164,12 @@ Snapshot build(const StoreView& v, int64_t now) {
     }
   }
 
+  // A live penalty shootout takes over the whole screen (above the dual
+  // now/next board). Goals don't fire during pens (the match score is frozen),
+  // so the goal override above never competes with this.
+  for (const auto& m : v.live)
+    if (hasShootoutData(m)) return shootoutSnapshot(m, v, now, false);
+
   // Assemble the "now" rows. Live matches first (this preserves the existing
   // two-live-games dual board), then fill any remaining slot with a
   // recently-finished match that was concurrent with the action — so each game
@@ -186,7 +210,11 @@ Snapshot build(const StoreView& v, int64_t now) {
   if (finalCount == 1) {
     bool showNext = !v.next.empty() && (now / FINAL_ALT_MS) % 2 == 1;
     if (!showNext) {
-      Snapshot s = liveSnapshot(v.finals[0].match, v, now);
+      const Match& fm = v.finals[0].match;
+      // A shootout final gets the victory board; everything else, the generic
+      // FINAL hold (which already shows any result note along the bottom).
+      if (hasShootoutData(fm)) return shootoutSnapshot(fm, v, now, true);
+      Snapshot s = liveSnapshot(fm, v, now);
       s.finalHold = true;
       return s;
     }

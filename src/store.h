@@ -40,6 +40,9 @@ class Store {
   // Merge today's/schedule matches in by id, edge-detecting goals + finals.
   void put(const std::vector<Match>& matches);
   void putStandings(const std::vector<Group>& groups);
+  // Attach per-kick shootout results (from the summary endpoint) to a match.
+  void putShootout(const String& matchId, const std::vector<int8_t>& kicksHome,
+                   const std::vector<int8_t>& kicksAway);
 
   // For the poller's cadence choice.
   std::vector<Match> schedule();

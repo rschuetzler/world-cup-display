@@ -45,13 +45,23 @@ void Store::put(const std::vector<Match>& incoming) {
       finished_.push_back({nm.id, now});
   }
 
-  // Merge by id.
+  // Merge by id. The scoreboard payload carries no per-kick shootout data, so
+  // carry any already-fetched kicks forward across the overwrite (the summary
+  // poll refreshes them out of band).
   for (const Match& nm : incoming) {
     Match* old = findById(nm.id);
-    if (old)
+    if (old) {
+      std::vector<int8_t> kh = old->kicksHome, ka = old->kicksAway;
+      bool had = old->hasShootout;
       *old = nm;
-    else
+      if (!nm.hasShootout && had) {
+        old->kicksHome = kh;
+        old->kicksAway = ka;
+        old->hasShootout = true;
+      }
+    } else {
       matches_.push_back(nm);
+    }
   }
 
   // Prune.
@@ -69,6 +79,18 @@ void Store::put(const std::vector<Match>& incoming) {
 void Store::putStandings(const std::vector<Group>& groups) {
   xSemaphoreTake(mutex_, portMAX_DELAY);
   standings_ = groups;
+  xSemaphoreGive(mutex_);
+}
+
+void Store::putShootout(const String& matchId, const std::vector<int8_t>& kicksHome,
+                        const std::vector<int8_t>& kicksAway) {
+  xSemaphoreTake(mutex_, portMAX_DELAY);
+  Match* m = findById(matchId);
+  if (m) {
+    m->kicksHome = kicksHome;
+    m->kicksAway = kicksAway;
+    m->hasShootout = true;
+  }
   xSemaphoreGive(mutex_);
 }
 

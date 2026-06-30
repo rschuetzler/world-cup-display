@@ -93,6 +93,7 @@ Side parseSide(JsonArrayConst competitors, const char* homeAway, MatchState stat
   s.name = name ? String(name) : String("");
   const char* ab = team["abbreviation"];
   s.abbrev = ab ? String(ab) : String("");
+  s.teamId = idToString(team["id"]);
   if (state != MatchState::Scheduled) {
     JsonVariantConst sv = comp["score"];
     int v;
@@ -103,6 +104,9 @@ Side parseSide(JsonArrayConst competitors, const char* homeAway, MatchState stat
       s.hasScore = true;
       s.score = v;
     }
+    JsonVariantConst so = comp["shootoutScore"];
+    if (so.is<int>()) s.shootoutScore = so.as<int>();
+    else if (so.is<const char*>() && parseLeadingInt(so.as<const char*>(), v) && v >= 0) s.shootoutScore = v;
   }
   return s;
 }
@@ -159,7 +163,9 @@ bool parseScoreboard(char* buf, size_t len, std::vector<Match>& out) {
   JsonObject cr = comp["competitors"].add<JsonObject>();
   cr["homeAway"] = true;
   cr["score"] = true;
+  cr["shootoutScore"] = true;
   JsonObject tm = cr["team"].to<JsonObject>();
+  tm["id"] = true;
   tm["displayName"] = true;
   tm["name"] = true;
   tm["abbreviation"] = true;
@@ -243,6 +249,48 @@ bool parseStandings(char* buf, size_t len, std::vector<Group>& out) {
     out.push_back(g);
   }
   return true;
+}
+
+bool parseShootout(char* buf, size_t len, const String& homeId, const String& awayId,
+                   std::vector<int8_t>& kicksHome, std::vector<int8_t>& kicksAway) {
+  JsonDocument filter(&psram);
+  JsonObject side = filter["shootout"].add<JsonObject>();
+  side["id"] = true;
+  JsonObject shot = side["shots"].add<JsonObject>();
+  shot["shotNumber"] = true;
+  shot["didScore"] = true;
+
+  JsonDocument doc(&psram);
+  DeserializationError err =
+      deserializeJson(doc, buf, len, DeserializationOption::Filter(filter),
+                      DeserializationOption::NestingLimit(50));
+  if (err) return false;
+
+  JsonArrayConst sides = doc["shootout"].as<JsonArrayConst>();
+  if (sides.isNull()) return false;
+
+  kicksHome.clear();
+  kicksAway.clear();
+  bool any = false;
+  for (JsonObjectConst sd : sides) {
+    String id = idToString(sd["id"]);
+    std::vector<int8_t>* dest =
+        (id == homeId) ? &kicksHome : (id == awayId) ? &kicksAway : nullptr;
+    if (!dest) continue;
+    // Order by shotNumber — the array is already ordered, but don't assume it.
+    int maxN = 0;
+    for (JsonObjectConst sh : sd["shots"].as<JsonArrayConst>()) {
+      int n = sh["shotNumber"] | 0;
+      if (n > maxN) maxN = n;
+    }
+    dest->assign(maxN, -1);
+    for (JsonObjectConst sh : sd["shots"].as<JsonArrayConst>()) {
+      int n = sh["shotNumber"] | 0;
+      if (n >= 1 && n <= maxN) (*dest)[n - 1] = (sh["didScore"] | false) ? 1 : 0;
+      any = true;
+    }
+  }
+  return any;
 }
 
 }  // namespace Espn

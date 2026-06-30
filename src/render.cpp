@@ -292,6 +292,161 @@ void live(Fb& fb, const Snapshot& s) {
   }
 }
 
+// ── PENALTY SHOOTOUT ────────────────────────────────────────────────────────
+// Marker glyphs, radius 2, sharing the goal-celebration disc primitive.
+void ringMark(Fb& fb, int cx, int cy, int r, Rgb c) {
+  float ro = r * r + r * 0.4f, ri = (r - 1) * (r - 1) + (r - 1) * 0.4f;
+  for (int dy = -r; dy <= r; dy++)
+    for (int dx = -r; dx <= r; dx++) {
+      float d = (float)(dx * dx + dy * dy);
+      if (d <= ro && d > ri) fb.add(cx + dx, cy + dy, c, 1);
+    }
+}
+void diamond(Fb& fb, int cx, int cy, int r, Rgb c) {
+  for (int dy = -r; dy <= r; dy++)
+    for (int dx = -r; dx <= r; dx++) {
+      int ad = (dx < 0 ? -dx : dx) + (dy < 0 ? -dy : dy);
+      if (ad <= r) fb.add(cx + dx, cy + dy, c, 1);
+    }
+}
+
+// scored = green disc, missed = red diamond (unmistakable next to a disc at this
+// resolution), next = gold ring + dim centre, pending = single faint pixel.
+enum class Kick { Scored, Missed, Next, Pending };
+void kickMarker(Fb& fb, int cx, int cy, Kick k) {
+  switch (k) {
+    case Kick::Scored: disc(fb, cx, cy, 2, Pal::win); break;
+    case Kick::Missed: diamond(fb, cx, cy, 2, Pal::live); break;
+    case Kick::Next:
+      ringMark(fb, cx, cy, 2, Pal::gold);
+      fb.add(cx, cy, Pal::gold, 0.55f);
+      break;
+    case Kick::Pending: fb.add(cx, cy, Pal::faint, 1); break;
+  }
+}
+
+// Whose turn + sudden-death split, derived from the two ordered kick arrays.
+// Home is assumed to kick first each round (per the design).
+struct PenState {
+  int lenH, lenA;
+  bool suddenDeath;
+  int kicker;  // 0 home, 1 away — level count means home is up next
+};
+PenState penState(const Snapshot& s) {
+  PenState p;
+  p.lenH = (int)s.kicksHome.size();
+  p.lenA = (int)s.kicksAway.size();
+  p.suddenDeath = p.lenH > 5 || p.lenA > 5;
+  p.kicker = (p.lenH <= p.lenA) ? 0 : 1;
+  return p;
+}
+
+// View A — live shootout, kick by kick.
+void shootout(Fb& fb, const Snapshot& s) {
+  PenState p = penState(s);
+  bool sd = p.suddenDeath;
+
+  Font::text(fb, 4, 2, sd ? "SUDDEN DEATH" : "SHOOTOUT", sd ? Pal::live : Pal::gold);
+  String pk = String("PK ") + String(s.penHome) + "-" + String(s.penAway);
+  Font::textRight(fb, 124, 2, pk.c_str(), Pal::soft);
+
+  Flags::draw(fb, 6, 11, 26, 17, s.home.c_str());
+  Flags::draw(fb, 96, 11, 26, 17, s.away.c_str());
+  Font::textCenter(fb, 19, 30, s.home.c_str(), p.kicker == 0 ? Pal::gold : Pal::wc_white);
+  Font::textCenter(fb, 109, 30, s.away.c_str(), p.kicker == 1 ? Pal::gold : Pal::ice);
+  String score = String(clampi(s.hs, 0, 9)) + "-" + String(clampi(s.as, 0, 9));
+  Geist::bigCenter(fb, 64, 11, score.c_str(), 18, Pal::wc_white);
+
+  // The "pressure line": each team's kicks hug its flag and grow inward, y=44.
+  if (!sd) {
+    const int hx[5] = {8, 20, 32, 44, 56};
+    const int ax[5] = {120, 108, 96, 84, 72};
+    for (int k = 0; k < 5; k++) {
+      Kick hk = k < p.lenH ? (s.kicksHome[k] ? Kick::Scored : Kick::Missed)
+                           : (p.kicker == 0 && k == p.lenH ? Kick::Next : Kick::Pending);
+      Kick ak = k < p.lenA ? (s.kicksAway[k] ? Kick::Scored : Kick::Missed)
+                           : (p.kicker == 1 && k == p.lenA ? Kick::Next : Kick::Pending);
+      kickMarker(fb, hx[k], 44, hk);
+      kickMarker(fb, ax[k], 44, ak);
+    }
+  } else {
+    int hg = 0, ag = 0;
+    for (int i = 0; i < 5 && i < p.lenH; i++) hg += s.kicksHome[i];
+    for (int i = 0; i < 5 && i < p.lenA; i++) ag += s.kicksAway[i];
+    Font::text(fb, 6, 41, String(hg).c_str(), Pal::dim);
+    Font::textRight(fb, 122, 41, String(ag).c_str(), Pal::dim);
+    const int hsd[4] = {18, 32, 46, 60};
+    const int asd[4] = {110, 96, 82, 68};
+    int sdH = p.lenH > 5 ? p.lenH - 5 : 0;
+    int sdA = p.lenA > 5 ? p.lenA - 5 : 0;
+    int aH = p.kicker == 0 ? sdH : -1;
+    int aA = p.kicker == 1 ? sdA : -1;
+    int cols = sdH;
+    if (sdA > cols) cols = sdA;
+    if (aH + 1 > cols) cols = aH + 1;
+    if (aA + 1 > cols) cols = aA + 1;
+    if (cols > 4) cols = 4;
+    for (int c = 0; c < cols; c++) {
+      Kick hk = c < sdH ? (s.kicksHome[5 + c] ? Kick::Scored : Kick::Missed)
+                        : (aH == c ? Kick::Next : Kick::Pending);
+      Kick ak = c < sdA ? (s.kicksAway[5 + c] ? Kick::Scored : Kick::Missed)
+                        : (aA == c ? Kick::Next : Kick::Pending);
+      kickMarker(fb, hsd[c], 44, hk);
+      kickMarker(fb, asd[c], 44, ak);
+    }
+  }
+
+  String msg = (p.kicker == 0 ? s.home : s.away) + " TO KICK";
+  Font::textCenter(fb, 64, 56, msg.c_str(), Pal::gold);
+}
+
+// The round a knockout winner advances to (from the current round label).
+const char* nextRound(const String& stage) {
+  String u = stage;
+  u.toUpperCase();
+  if (u.indexOf("32") >= 0) return "ROUND OF 16";
+  if (u.indexOf("16") >= 0) return "THE QUARTERFINALS";
+  if (u.indexOf("QUARTER") >= 0) return "THE SEMIFINALS";
+  if (u.indexOf("SEMI") >= 0) return "THE FINAL";
+  return "";
+}
+
+// View B — full-time / victory screen once the shootout is decided.
+void shootoutVictory(Fb& fb, const Snapshot& s) {
+  int winner = s.penHome >= s.penAway ? 0 : 1;
+
+  Font::text(fb, 4, 2, "FULL TIME", Pal::win);
+  Font::textRight(fb, 124, 2, s.stage.c_str(), Pal::soft);
+
+  Flags::draw(fb, 6, 11, 26, 17, s.home.c_str());
+  Flags::draw(fb, 96, 11, 26, 17, s.away.c_str());
+  Font::textCenter(fb, 19, 30, s.home.c_str(), winner == 0 ? Pal::win : Pal::dim);
+  Font::textCenter(fb, 109, 30, s.away.c_str(), winner == 1 ? Pal::win : Pal::dim);
+  String score = String(clampi(s.hs, 0, 9)) + "-" + String(clampi(s.as, 0, 9));
+  Geist::bigCenter(fb, 64, 11, score.c_str(), 18, Pal::wc_white);
+
+  // "PENALTIES x-y", centred, with the winner's tally in green.
+  String hd = String(s.penHome), ad = String(s.penAway);
+  String full = String("PENALTIES ") + hd + "-" + ad;
+  int x = rnd(64 - Font::textW(full.c_str()) / 2.0f);
+  Font::text(fb, x, 41, "PENALTIES ", Pal::soft);
+  x += textAdv("PENALTIES ");
+  Font::text(fb, x, 41, hd.c_str(), winner == 0 ? Pal::win : Pal::soft);
+  x += textAdv(hd);
+  Font::text(fb, x, 41, "-", Pal::dim);
+  x += 6;
+  Font::text(fb, x, 41, ad.c_str(), winner == 1 ? Pal::win : Pal::soft);
+
+  // Advancement ticker, scrolling right→left, pure function of snap.now.
+  String name = Teams::name((winner == 0 ? s.home : s.away).c_str());
+  const char* nr = nextRound(s.stage);
+  String msg = (nr && *nr) ? name + " ADVANCES TO " + nr : name + " ADVANCES";
+  int w = Font::textW(msg.c_str()) + 18;
+  int off = (int)((s.now * 26 / 1000) % w);
+  Font::text(fb, -off, 54, msg.c_str(), Pal::gold);
+  Font::text(fb, w - off, 54, msg.c_str(), Pal::gold);
+}
+
 // ── GOAL CELEBRATION ────────────────────────────────────────────────────────
 void draw2xCenter(Fb& fb, int cx, int y, const String& str, Rgb color) {
   Font::text2x(fb, rnd(cx - Font::text2xW(str.c_str()) / 2.0f), y, str.c_str(), color);
@@ -404,6 +559,12 @@ void board(Fb& fb, const Snapshot& s) {
       break;
     case Board::Goal:
       goal(fb, s);
+      break;
+    case Board::Shootout:
+      if (s.shootoutDecided)
+        shootoutVictory(fb, s);
+      else
+        shootout(fb, s);
       break;
   }
 }

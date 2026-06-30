@@ -26,6 +26,12 @@ bool parseScoreboard(char* buf, size_t len, std::vector<Match>& out);
 // live board's group-letter label).
 bool parseStandings(char* buf, size_t len, std::vector<Group>& out);
 
+// Parse the per-match summary body's `shootout` array into ordered per-kick
+// results (1 scored, 0 missed) for the home/away sides, keyed by ESPN team id.
+// Returns false on JSON error or if no shootout data is present.
+bool parseShootout(char* buf, size_t len, const String& homeId, const String& awayId,
+                   std::vector<int8_t>& kicksHome, std::vector<int8_t>& kicksAway);
+
 // Map an ESPN status state/detail pair to a MatchState (exposed for clarity).
 MatchState stateFromStatus(const char* state, const char* detail, const char* name);
 }  // namespace Espn

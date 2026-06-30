@@ -8,7 +8,7 @@
 #include <vector>
 #include "store.h"
 
-enum class Board { NowNext, Live, Goal };
+enum class Board { NowNext, Live, Goal, Shootout };
 
 struct LiveRow {
   String home, away;  // codes
@@ -49,6 +49,13 @@ struct Snapshot {
   int64_t goalStartedAt;
   int team;     // 0 home, 1 away
   String code;  // scoring team code
+
+  // shootout (Board::Shootout). Match score (hs/as) stays the frozen
+  // regulation result; the shootout tally is separate.
+  bool shootoutDecided;            // false = live shootout, true = victory screen
+  int penHome, penAway;            // running penalty tally
+  std::vector<int8_t> kicksHome;   // per-kick results in order (1 scored, 0 missed)
+  std::vector<int8_t> kicksAway;
 };
 
 namespace SnapshotBuilder {

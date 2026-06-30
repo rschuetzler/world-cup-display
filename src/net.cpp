@@ -17,6 +17,8 @@ const char* TZ = "MST7MDT,M3.2.0,M11.1.0";
 const char* USER_AGENT = "world-cup-tracker/0.1";
 const char* SCOREBOARD_BASE =
     "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard";
+const char* SUMMARY_BASE =
+    "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary";
 const char* STANDINGS_URL =
     "https://site.api.espn.com/apis/v2/sports/soccer/fifa.world/standings";
 const char* TOURNAMENT_RANGE = "20260611-20260719";
@@ -153,6 +155,38 @@ bool fetchStandings() {
   return ok;
 }
 
+// Pull per-kick shootout results for one match from the (large) summary
+// endpoint. Filtered down to just the `shootout` array on parse.
+bool fetchShootout(const Match& m) {
+  String url = String(SUMMARY_BASE) + "?event=" + m.id;
+  char* buf = nullptr;
+  size_t len = 0;
+  if (!httpGet(url, &buf, &len)) return false;
+  std::vector<int8_t> kh, ka;
+  bool ok = Espn::parseShootout(buf, len, m.home.teamId, m.away.teamId, kh, ka);
+  heap_caps_free(buf);
+  if (ok) g_store->putShootout(m.id, kh, ka);
+  return ok;
+}
+
+// Refresh shootout data for any match in a penalty shootout (period 5). Fetched
+// every cycle while live; once more when it goes final to capture the decider.
+void refreshShootouts(const std::vector<Match>& matches, std::vector<String>& finalsDone) {
+  for (const auto& m : matches) {
+    if (m.period < 5) continue;
+    bool live = isLiveState(m.state);
+    bool done = false;
+    for (const auto& id : finalsDone)
+      if (id == m.id) { done = true; break; }
+    if (live) {
+      fetchShootout(m);
+    } else if (m.state == MatchState::Finished && !done) {
+      fetchShootout(m);
+      finalsDone.push_back(m.id);
+    }
+  }
+}
+
 void refreshSchedule() {
   fetchScoreboard(scoreboardUrl(TOURNAMENT_RANGE));
   fetchStandings();
@@ -183,6 +217,7 @@ void task(void*) {
 
   refreshSchedule();
   int64_t lastSchedule = nowEpochMs();
+  std::vector<String> penFinalsDone;  // shootout finals whose decider we've fetched
 
   for (;;) {
     if (WiFi.status() != WL_CONNECTED) connectWifi();
@@ -203,6 +238,7 @@ void task(void*) {
     }
 
     std::vector<Match> matches = g_store->schedule();
+    refreshShootouts(matches, penFinalsDone);
     std::vector<GoalEvent> goals = g_store->goalEvents(nowEpochMs());
     uint32_t interval = chooseInterval(matches, goals, nowEpochMs());
 

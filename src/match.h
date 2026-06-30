@@ -3,6 +3,7 @@
 #pragma once
 #include <Arduino.h>
 #include <stdint.h>
+#include <vector>
 
 // Halftime here means "any in-progress intermission with the clock stopped" —
 // regulation half-time, end of regulation before extra time, the extra-time
@@ -13,8 +14,10 @@ enum class MatchState { Scheduled, Live, Halftime, Finished };
 struct Side {
   String name;    // displayName (or name)
   String abbrev;  // may be empty
+  String teamId;  // ESPN numeric team id (matches the summary shootout array)
   bool hasScore;  // false == nil score (distinct from 0 — matters for goal detection)
   int score;      // valid only when hasScore
+  int shootoutScore = 0;  // running penalty-shootout tally (scoreboard "shootoutScore")
 };
 
 struct Match {
@@ -30,6 +33,11 @@ struct Match {
   int minute = 0;   // base minute parsed from clock ("45'+4'" -> 45)
   int stoppage = 0; // added minutes ("45'+4'" -> 4), 0 if none
   int period = 0;   // 1 1st half, 2 2nd half, 3/4 extra time, 5 penalties
+  // Per-kick shootout results in order (1 scored, 0 missed), from the summary
+  // endpoint; empty until fetched. Length implies kicks taken per side.
+  bool hasShootout = false;
+  std::vector<int8_t> kicksHome;
+  std::vector<int8_t> kicksAway;
 };
 
 inline bool isLiveState(MatchState s) {
