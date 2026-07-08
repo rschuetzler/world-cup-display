@@ -21,12 +21,11 @@ const char* SUMMARY_BASE =
     "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary";
 const char* STANDINGS_URL =
     "https://site.api.espn.com/apis/v2/sports/soccer/fifa.world/standings";
-const char* TOURNAMENT_RANGE = "20260611-20260719";
 
 const uint32_t HTTP_TIMEOUT_MS = 20000;
 const int FAIL_LIMIT = 3;
 
-const int64_t SCHEDULE_INTERVAL_MS = 60 * 60 * 1000;  // hourly
+const int64_t STANDINGS_INTERVAL_MS = 60 * 60 * 1000;  // hourly
 const uint32_t LIVE_INTERVAL = 20000;
 const uint32_t SOON_INTERVAL = 60000;
 const uint32_t IDLE_INTERVAL = 600000;
@@ -123,10 +122,15 @@ String yyyymmdd(time_t t) {
   return String(b);
 }
 
-// today-1 .. today+1 (UTC), matching Poller.today_range.
+// today-1 .. today+7 (UTC). The 7-day forward window keeps upcoming games in
+// view across the multi-day gaps between knockout rounds (e.g. the round of 16
+// ends two days before the quarterfinals, and the gaps widen further toward the
+// final) — a today±1 window falls empty in those gaps. The window stays small
+// enough that its payload never approaches the ~1MB point where readBody's
+// buffer growth can't fit in 2MB PSRAM.
 String todayRange(int64_t now) {
   time_t s = (time_t)(now / 1000);
-  return yyyymmdd(s - 86400) + "-" + yyyymmdd(s + 86400);
+  return yyyymmdd(s - 86400) + "-" + yyyymmdd(s + 7 * 86400);
 }
 
 String scoreboardUrl(const String& range) {
@@ -187,10 +191,12 @@ void refreshShootouts(const std::vector<Match>& matches, std::vector<String>& fi
   }
 }
 
-void refreshSchedule() {
-  fetchScoreboard(scoreboardUrl(TOURNAMENT_RANGE));
-  fetchStandings();
-}
+// The schedule itself rides in on the adaptive today-1..today+7 scoreboard poll
+// (see task loop) — that rolling window always covers the next round, and its
+// payload stays small. So the periodic refresh only pulls standings; a full
+// tournament-range scoreboard fetch is both redundant and, at ~1MB, too large
+// for readBody's growth buffer to hold in 2MB PSRAM.
+void refreshStandings() { fetchStandings(); }
 
 // Port of Poller.choose_interval.
 uint32_t chooseInterval(const std::vector<Match>& matches, const std::vector<GoalEvent>& goals,
@@ -215,17 +221,17 @@ void task(void*) {
   uint32_t t0 = millis();
   while (!timeSynced() && millis() - t0 < 15000) delay(200);
 
-  refreshSchedule();
-  int64_t lastSchedule = nowEpochMs();
+  refreshStandings();
+  int64_t lastStandings = nowEpochMs();
   std::vector<String> penFinalsDone;  // shootout finals whose decider we've fetched
 
   for (;;) {
     if (WiFi.status() != WL_CONNECTED) connectWifi();
 
     int64_t now = nowEpochMs();
-    if (now - lastSchedule >= SCHEDULE_INTERVAL_MS) {
-      refreshSchedule();
-      lastSchedule = now;
+    if (now - lastStandings >= STANDINGS_INTERVAL_MS) {
+      refreshStandings();
+      lastStandings = now;
     }
 
     if (fetchScoreboard(scoreboardUrl(todayRange(now)))) {

@@ -1,6 +1,7 @@
 // WiFi + NTP + ESPN polling task — the on-device replacement for the server's
-// Poller. Fetches the schedule + standings on boot (and hourly), polls today's
-// scoreboard on an adaptive cadence, and feeds the Store. Runs on core 0.
+// Poller. Polls a rolling scoreboard window (today-1 .. today+7) on an adaptive
+// cadence for the schedule + live scores, refreshes standings hourly, and feeds
+// the Store. Runs on core 0.
 #pragma once
 class Store;
 
