@@ -1,14 +1,17 @@
 #include "flags.h"
 #include <string.h>
+#include "font.h"
 #include "gen/flags_data.h"
 
 namespace {
 const int BASE_W = 26;
 const int BASE_H = 17;
 
-// Unknown-code checker colors, as the JS reference / Matrix.Flags use.
+// Placeholder-box colors: a dark slate fill, a slightly lighter border, and a
+// mid-slate "?" — drawn for undetermined bracket slots that have no real flag.
 const Rgb GREY = {0x3A, 0x41, 0x50};
 const Rgb DIM_BLACK = {0x26, 0x2B, 0x38};
+const Rgb QMARK = {0x66, 0x6F, 0x84};
 
 const FlagEntry* find(const char* code) {
   if (!code) return nullptr;
@@ -35,10 +38,17 @@ void scaleBlit(Fb& fb, int ox, int oy, int w, int h, const uint8_t* base) {
     }
 }
 
-void checker(Fb& fb, int ox, int oy, int w, int h) {
+// Undetermined-team placeholder: a blank dark square with a thin border and,
+// when it fits, a centered "?" glyph. Used wherever a real flag is unavailable.
+void questionBox(Fb& fb, int ox, int oy, int w, int h) {
   for (int fy = 0; fy < h; fy++)
-    for (int fx = 0; fx < w; fx++)
-      fb.set(ox + fx, oy + fy, ((fx + fy) % 2 == 1) ? GREY : DIM_BLACK);
+    for (int fx = 0; fx < w; fx++) {
+      bool edge = fx == 0 || fy == 0 || fx == w - 1 || fy == h - 1;
+      fb.set(ox + fx, oy + fy, edge ? GREY : DIM_BLACK);
+    }
+  // The 5x7 glyph only reads at row/hero sizes; smaller boxes stay a plain slate.
+  if (w >= 7 && h >= 7)
+    Font::text(fb, ox + (w - 5) / 2, oy + (h - 7) / 2, "?", QMARK);
 }
 }  // namespace
 
@@ -47,7 +57,7 @@ namespace Flags {
 void draw(Fb& fb, int ox, int oy, int w, int h, const char* code) {
   const FlagEntry* e = find(code);
   if (!e) {
-    checker(fb, ox, oy, w, h);
+    questionBox(fb, ox, oy, w, h);
     return;
   }
   if (w == 10 && h == 7)

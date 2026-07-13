@@ -1,5 +1,6 @@
 #include "snapshot.h"
 #include <ctype.h>
+#include "flags.h"
 
 namespace {
 const int64_t GOAL_DURATION_MS = 16500;
@@ -23,11 +24,16 @@ String upcase(const String& s) {
 }
 
 // 3-letter display code for a side: abbrev if present, else first 3 of name
-// upcased, else "".
+// upcased. Upcoming knockout slots ESPN hasn't resolved yet arrive as bracket
+// placeholders ("Semifinal 1 Winner" / "SFW1", etc.); none of the 48 baked
+// flags match those, so a missing flag is the reliable tell — such sides show
+// as "???" (and Flags::draw renders their "?" placeholder box).
 String code(const Side& s) {
-  if (s.abbrev.length() > 0) return s.abbrev;
-  if (s.name.length() > 0) return upcase(s.name.substring(0, 3));
-  return String("");
+  String c;
+  if (s.abbrev.length() > 0) c = s.abbrev;
+  else if (s.name.length() > 0) c = upcase(s.name.substring(0, 3));
+  else return String("???");
+  return Flags::has(c.c_str()) ? c : String("???");
 }
 
 int score(const Side& s) { return s.hasScore ? s.score : 0; }
